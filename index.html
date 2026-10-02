@@ -109,7 +109,7 @@ section, .branch{scroll-margin-top:24px}.languages{font-size:14px;color:var(--mu
 <header class="hero"><div class="wrap">
 <p class="eyebrow">授業資料を、自分の読みやすい言語で</p>
 <h1>授業資料 翻訳ツール<br>導入ガイド</h1>
-<p class="course-context"><a href="https://www.i-u.ac.jp/academics/faculty/hanxu/" target="_blank" rel="noopener noreferrer">韓</a>が担当する授業向けに試運用している翻訳ツールの導入ガイドです。<strong>Canvaの閲覧用資料</strong>と、<strong>Google Classroomで配布されたPDF</strong>に対応しています。</p>
+<p class="course-context">韓が担当する授業向けに試運用している翻訳ツールの導入ガイドです。<strong>Canvaの閲覧用資料</strong>と、<strong>Google Classroomで配布されたPDF</strong>に対応しています。</p>
 <p class="intro">日本語の資料を開いたまま、右側のパネルに訳文を表示します。ページを変えると訳文も更新されます。PDFを保存したり、別のサービスへアップロードしたりする操作は不要です。</p>
 <div class="tags"><span class="tag">パソコン版Chrome用</span><span class="tag">19言語</span><span class="tag">Tampermonkeyを使用・試用版</span></div>
 <nav aria-label="ガイド内の移動"><a href="#start">どこから始める？</a><a href="#canva-code">Canva版のコード</a><a href="#pdf-code">PDF版のコード</a><a href="#step5">資料別の使い方</a><a href="#help">うまく動かないとき</a></nav>
@@ -186,7 +186,32 @@ section, .branch{scroll-margin-top:24px}.languages{font-size:14px;color:var(--mu
 // @match        https://www.canva.com/design/*/view*
 // @run-at       document-idle
 // @grant        none
+// @license      MIT
 // ==/UserScript==
+
+/*
+MIT License
+
+Copyright (c) 2026 韓 (xhan21)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 
 // 以前のコード全体を、このコードに置き換えて保存してください。
 // PC版ChromeのTranslator APIを使います。外部の翻訳APIは使いません。
@@ -1884,7 +1909,32 @@ section, .branch{scroll-margin-top:24px}.languages{font-size:14px;color:var(--mu
 // @match        https://drive.google.com/file/u/*/d/*/preview*
 // @run-at       document-idle
 // @grant        none
+// @license      MIT
 // ==/UserScript==
+
+/*
+MIT License
+
+Copyright (c) 2026 韓 (xhan21)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 
 // PDF版の更新はコード全体を置き換えて保存してください。初回のみCanva版とは別に登録します。
 // PC版ChromeのTranslator APIを使います。外部の翻訳APIは使いません。
