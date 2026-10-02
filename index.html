@@ -101,6 +101,7 @@ section, .branch{scroll-margin-top:24px}.languages{font-size:14px;color:var(--mu
 .tool-card h3{margin-top:0}.tool-card .tool-version{color:var(--muted);font-size:13px;font-weight:400}
 .tool-card .script-name{font-size:14px}.tool-card textarea{background:#102231}.tool-card .actions{margin-top:14px}
 .tool-links{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0}.tool-links a{font-size:14px;font-weight:600}
+.panel-example{margin:24px 0 0;scroll-margin-top:24px}.panel-example figcaption{margin-bottom:12px}.panel-example strong{display:block;margin-bottom:6px}.panel-example p{margin:0}.panel-example-image{display:block;border:1px solid var(--line);border-radius:10px;overflow:hidden}.panel-example img{display:block;width:100%;height:auto}.panel-example .example-enlarge{display:inline-block;margin-top:8px;font-size:14px}
 @media(max-width:700px){.start-paths{grid-template-columns:1fr}.start-path{gap:4px}}
 </style>
 </head>
@@ -3920,6 +3921,11 @@ section, .branch{scroll-margin-top:24px}.languages{font-size:14px;color:var(--mu
 <li>PDFのページを変えると、訳文も自動で更新されます。PDFを保存・アップロードする操作は不要です。</li>
 </ol>
 <p class="small">画像だけで構成されたPDFには対応していません。</p>
+<figure class="panel-example" id="pdf-panel-example">
+<figcaption><strong>翻訳パネルの表示例</strong><p class="small">PDFを英語に翻訳している例です。元の資料を開いたまま、右側のパネルに本文の訳文が表示されていれば、翻訳できています。</p></figcaption>
+<a class="panel-example-image" href="guide-assets/pdf-translation-panel-example.png" target="_blank" rel="noopener noreferrer" aria-label="翻訳パネルの表示例を大きく見る（新しいタブ）"><img src="guide-assets/pdf-translation-panel-example.png" width="1552" height="675" loading="lazy" alt="左側に日本語の授業PDF、右側のPDF translatorパネルに英語の訳文が表示されている例"></a>
+<a class="example-enlarge" href="guide-assets/pdf-translation-panel-example.png" target="_blank" rel="noopener noreferrer">画像を大きく見る ↗</a>
+</figure>
 </article>
 <h3>どちらのツールも共通</h3>
 <p>日本語を選んだ場合は、「<strong>原文を表示</strong>」を押すと日本語のまま表示できます。ボタンの翻訳がオンの場合、ボタン名は選んだ言語に合わせて変わります。</p>
@@ -3952,7 +3958,7 @@ section, .branch{scroll-margin-top:24px}.languages{font-size:14px;color:var(--mu
 </section>
 <p class="small after-code">このツールは日本語の授業資料を読むための試用版です。資料の構成や利用環境によっては、文字・読み順・色を正しく反映できない場合があります。</p>
 </main>
-<footer><div class="wrap">2026年10月2日更新 · Canva版 v2.8.0 ／ PDF版 v0.3.0</div></footer>
+<footer><div class="wrap">2026年10月3日更新 · Canva版 v2.8.0 ／ PDF版 v0.3.0</div></footer>
 <script>
 for (const kind of ['canva', 'pdf']) {
  document.getElementById(`copy-${kind}-code`).addEventListener('click', async () => {
