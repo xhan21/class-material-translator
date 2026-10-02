@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Classroom PDF 翻訳パネル（試用版）
 // @namespace    local.classroom-pdf-translation
-// @version      0.3.0
+// @version      0.4.0
 // @description  Classroom・Google Driveで開いたPDFを、保存せず横のパネルで翻訳します。
 // @match        https://classroom.google.com/*
 // @match        https://drive.google.com/viewer/main*
@@ -40,7 +40,7 @@ SOFTWARE.
 
 // PDF版の更新はコード全体を置き換えて保存してください。初回のみCanva版とは別に登録します。
 // PC版ChromeのTranslator APIを使います。外部の翻訳APIは使いません。
-// 最初に言語を選び「翻訳開始」を押してください。初回は言語データを取得します。
+// 翻訳元と翻訳先を選び「翻訳開始」を押してください。同じ言語なら原文を表示します。初回は言語データを取得します。
 (() => {
   'use strict';
 
@@ -52,7 +52,7 @@ SOFTWARE.
     "retry": "Translate again",
     "collapse": "Minimize",
     "expand": "Expand",
-    "language": "Translation language",
+    "language": "Translate to",
     "move": "Drag the header or use arrow keys to move",
     "resize": "Drag the corner or use arrow keys to resize",
     "ready": "Select a language and click “{start}”.",
@@ -63,7 +63,7 @@ SOFTWARE.
     "active": "Automatic translation is on. The translation updates when you change slides.",
     "unavailable": "Built-in translation is unavailable. Use desktop Chrome 138 or later. Browser settings may restrict access.",
     "blocked": "Built-in translation is not permitted by this page or your browser settings.",
-    "unsupported": "Translation into this language is unavailable in this environment.",
+    "unsupported": "Translation between the selected languages is unavailable in this environment.",
     "failed": "Translation failed. Use the translation button to try again.",
     "pageOrder": "Reading order (this page)",
     "orderRows": "Row order",
@@ -75,7 +75,14 @@ SOFTWARE.
     "uiMemoryOnly": "Kept until this page is reloaded. Slide text still uses the selected language.",
     "textSize": "Text size",
     "textSmaller": "Smaller text",
-    "textLarger": "Larger text"
+    "textLarger": "Larger text",
+    "sourceLanguage": "Translate from",
+    "originalStart": "Show original",
+    "originalRetry": "Refresh display",
+    "originalReady": "Click “{start}” to display the original text.",
+    "originalPreparing": "Preparing original text…",
+    "originalTranslating": "Displaying original text…",
+    "originalActive": "Original text is displayed. It updates when you change pages."
   },
   "ja": {
     "title": "PDF翻訳",
@@ -83,7 +90,7 @@ SOFTWARE.
     "retry": "翻訳し直す",
     "collapse": "折りたたむ",
     "expand": "展開する",
-    "language": "本文の言語",
+    "language": "翻訳先",
     "move": "見出しをドラッグ、または矢印キーで移動",
     "resize": "角をドラッグ、または矢印キーでサイズ変更",
     "ready": "言語を選び「{start}」を押してください。",
@@ -94,7 +101,7 @@ SOFTWARE.
     "active": "自動翻訳が有効です。スライドを切り替えると訳文が更新されます。",
     "unavailable": "内蔵翻訳を利用できません。パソコン版Chrome 138以降をご利用ください。ブラウザーの設定で制限されている場合もあります。",
     "blocked": "このページ、またはブラウザーの設定で内蔵翻訳が許可されていません。",
-    "unsupported": "この環境では、選択した言語への翻訳を利用できません。",
+    "unsupported": "この環境では、選択した翻訳元と翻訳先の組み合わせを利用できません。",
     "failed": "翻訳できませんでした。翻訳ボタンを押して再試行してください。",
     "pageOrder": "このページの読み順",
     "orderRows": "行順",
@@ -106,7 +113,14 @@ SOFTWARE.
     "uiMemoryOnly": "設定は再読み込みまで保持されます。本文は選択した言語で表示します。",
     "textSize": "文字サイズ",
     "textSmaller": "文字を小さく",
-    "textLarger": "文字を大きく"
+    "textLarger": "文字を大きく",
+    "sourceLanguage": "翻訳元",
+    "originalStart": "原文を表示",
+    "originalRetry": "表示を更新",
+    "originalReady": "「{start}」を押すと原文を表示します。",
+    "originalPreparing": "原文を準備しています…",
+    "originalTranslating": "原文を表示しています…",
+    "originalActive": "原文を表示しています。ページを切り替えると表示が更新されます。"
   },
   "zh": {
     "title": "PDF 翻译",
@@ -137,7 +151,14 @@ SOFTWARE.
     "uiMemoryOnly": "设置仅保留到刷新页面前。正文仍使用所选语言。",
     "textSize": "字号",
     "textSmaller": "缩小文字",
-    "textLarger": "放大文字"
+    "textLarger": "放大文字",
+    "sourceLanguage": "原文语言",
+    "originalStart": "显示原文",
+    "originalRetry": "刷新显示",
+    "originalReady": "点击“{start}”显示原文。",
+    "originalPreparing": "正在准备原文…",
+    "originalTranslating": "正在显示原文…",
+    "originalActive": "正在显示原文。切换页面时会自动更新。"
   },
   "zh-Hant": {
     "title": "PDF 翻譯",
@@ -168,7 +189,14 @@ SOFTWARE.
     "uiMemoryOnly": "設定僅保留至重新整理頁面前。內文仍使用所選語言。",
     "textSize": "字級",
     "textSmaller": "縮小文字",
-    "textLarger": "放大文字"
+    "textLarger": "放大文字",
+    "sourceLanguage": "原文語言",
+    "originalStart": "顯示原文",
+    "originalRetry": "重新整理顯示",
+    "originalReady": "點選「{start}」顯示原文。",
+    "originalPreparing": "正在準備原文…",
+    "originalTranslating": "正在顯示原文…",
+    "originalActive": "正在顯示原文。切換頁面時會自動更新。"
   },
   "ko": {
     "title": "PDF 번역",
@@ -176,7 +204,7 @@ SOFTWARE.
     "retry": "다시 번역",
     "collapse": "접기",
     "expand": "펼치기",
-    "language": "번역할 언어",
+    "language": "번역 언어",
     "move": "상단을 드래그하거나 방향키로 이동",
     "resize": "모서리를 드래그하거나 방향키로 크기 조절",
     "ready": "언어를 선택하고 ‘{start}’을 누르세요.",
@@ -199,7 +227,14 @@ SOFTWARE.
     "uiMemoryOnly": "페이지를 새로고침하기 전까지만 유지됩니다. 본문은 선택한 언어를 사용합니다.",
     "textSize": "글자 크기",
     "textSmaller": "글자 작게",
-    "textLarger": "글자 크게"
+    "textLarger": "글자 크게",
+    "sourceLanguage": "원문 언어",
+    "originalStart": "원문 표시",
+    "originalRetry": "표시 새로고침",
+    "originalReady": "“{start}”를 눌러 원문을 표시하세요.",
+    "originalPreparing": "원문 준비 중…",
+    "originalTranslating": "원문 표시 중…",
+    "originalActive": "원문을 표시합니다. 페이지를 바꾸면 자동으로 갱신됩니다."
   },
   "vi": {
     "title": "Dịch PDF",
@@ -230,7 +265,14 @@ SOFTWARE.
     "uiMemoryOnly": "Chỉ giữ đến khi tải lại trang. Nội dung vẫn dùng ngôn ngữ đã chọn.",
     "textSize": "Cỡ chữ",
     "textSmaller": "Giảm cỡ chữ",
-    "textLarger": "Tăng cỡ chữ"
+    "textLarger": "Tăng cỡ chữ",
+    "sourceLanguage": "Ngôn ngữ gốc",
+    "originalStart": "Hiện bản gốc",
+    "originalRetry": "Làm mới hiển thị",
+    "originalReady": "Nhấn “{start}” để hiển thị văn bản gốc.",
+    "originalPreparing": "Đang chuẩn bị bản gốc…",
+    "originalTranslating": "Đang hiển thị bản gốc…",
+    "originalActive": "Đang hiển thị bản gốc. Nội dung cập nhật khi chuyển trang."
   },
   "th": {
     "title": "แปล PDF",
@@ -238,7 +280,7 @@ SOFTWARE.
     "retry": "แปลอีกครั้ง",
     "collapse": "ย่อ",
     "expand": "ขยาย",
-    "language": "ภาษาปลายทาง",
+    "language": "ภาษาที่แปล",
     "move": "ลากส่วนหัวหรือใช้ปุ่มลูกศรเพื่อย้าย",
     "resize": "ลากมุมหรือใช้ปุ่มลูกศรเพื่อปรับขนาด",
     "ready": "เลือกภาษาแล้วกด “{start}”",
@@ -261,7 +303,14 @@ SOFTWARE.
     "uiMemoryOnly": "บันทึกไว้จนกว่าจะโหลดหน้าใหม่ เนื้อหายังคงใช้ภาษาที่เลือก",
     "textSize": "ขนาดตัวอักษร",
     "textSmaller": "ลดขนาดตัวอักษร",
-    "textLarger": "เพิ่มขนาดตัวอักษร"
+    "textLarger": "เพิ่มขนาดตัวอักษร",
+    "sourceLanguage": "ภาษาต้นฉบับ",
+    "originalStart": "แสดงต้นฉบับ",
+    "originalRetry": "รีเฟรชการแสดงผล",
+    "originalReady": "กด “{start}” เพื่อแสดงข้อความต้นฉบับ",
+    "originalPreparing": "กำลังเตรียมต้นฉบับ…",
+    "originalTranslating": "กำลังแสดงต้นฉบับ…",
+    "originalActive": "กำลังแสดงข้อความต้นฉบับ เนื้อหาจะอัปเดตเมื่อเปลี่ยนหน้า"
   },
   "id": {
     "title": "Penerjemah PDF",
@@ -292,7 +341,14 @@ SOFTWARE.
     "uiMemoryOnly": "Disimpan sampai halaman dimuat ulang. Teks slide tetap memakai bahasa pilihan.",
     "textSize": "Ukuran teks",
     "textSmaller": "Perkecil teks",
-    "textLarger": "Perbesar teks"
+    "textLarger": "Perbesar teks",
+    "sourceLanguage": "Bahasa sumber",
+    "originalStart": "Tampilkan teks asli",
+    "originalRetry": "Perbarui tampilan",
+    "originalReady": "Klik “{start}” untuk menampilkan teks asli.",
+    "originalPreparing": "Menyiapkan teks asli…",
+    "originalTranslating": "Menampilkan teks asli…",
+    "originalActive": "Teks asli ditampilkan. Tampilan diperbarui saat berganti halaman."
   },
   "es": {
     "title": "Traductor de PDF",
@@ -323,7 +379,14 @@ SOFTWARE.
     "uiMemoryOnly": "Se conserva hasta recargar la página. El texto mantiene el idioma seleccionado.",
     "textSize": "Tamaño del texto",
     "textSmaller": "Reducir texto",
-    "textLarger": "Ampliar texto"
+    "textLarger": "Ampliar texto",
+    "sourceLanguage": "Idioma de origen",
+    "originalStart": "Mostrar original",
+    "originalRetry": "Actualizar vista",
+    "originalReady": "Pulsa “{start}” para mostrar el texto original.",
+    "originalPreparing": "Preparando el texto original…",
+    "originalTranslating": "Mostrando el texto original…",
+    "originalActive": "Se muestra el texto original. Se actualiza al cambiar de página."
   },
   "fr": {
     "title": "Traducteur PDF",
@@ -354,7 +417,14 @@ SOFTWARE.
     "uiMemoryOnly": "Conservé jusqu’au rechargement de la page. Le texte reste dans la langue choisie.",
     "textSize": "Taille du texte",
     "textSmaller": "Réduire le texte",
-    "textLarger": "Agrandir le texte"
+    "textLarger": "Agrandir le texte",
+    "sourceLanguage": "Langue source",
+    "originalStart": "Afficher l’original",
+    "originalRetry": "Actualiser l’affichage",
+    "originalReady": "Cliquez sur « {start} » pour afficher le texte original.",
+    "originalPreparing": "Préparation du texte original…",
+    "originalTranslating": "Affichage du texte original…",
+    "originalActive": "Le texte original est affiché. Il est actualisé lorsque vous changez de page."
   },
   "de": {
     "title": "PDF-Übersetzer",
@@ -385,7 +455,14 @@ SOFTWARE.
     "uiMemoryOnly": "Bleibt bis zum Neuladen der Seite erhalten. Der Folientext bleibt in der gewählten Sprache.",
     "textSize": "Textgröße",
     "textSmaller": "Text verkleinern",
-    "textLarger": "Text vergrößern"
+    "textLarger": "Text vergrößern",
+    "sourceLanguage": "Ausgangssprache",
+    "originalStart": "Original anzeigen",
+    "originalRetry": "Anzeige aktualisieren",
+    "originalReady": "Klicke auf „{start}“, um den Originaltext anzuzeigen.",
+    "originalPreparing": "Originaltext wird vorbereitet…",
+    "originalTranslating": "Originaltext wird angezeigt…",
+    "originalActive": "Der Originaltext wird angezeigt und beim Seitenwechsel aktualisiert."
   },
   "it": {
     "title": "Traduttore PDF",
@@ -416,7 +493,14 @@ SOFTWARE.
     "uiMemoryOnly": "Conservato fino al ricaricamento della pagina. Il testo mantiene la lingua scelta.",
     "textSize": "Dimensione testo",
     "textSmaller": "Riduci testo",
-    "textLarger": "Ingrandisci testo"
+    "textLarger": "Ingrandisci testo",
+    "sourceLanguage": "Lingua di origine",
+    "originalStart": "Mostra originale",
+    "originalRetry": "Aggiorna visualizzazione",
+    "originalReady": "Premi “{start}” per mostrare il testo originale.",
+    "originalPreparing": "Preparazione del testo originale…",
+    "originalTranslating": "Visualizzazione del testo originale…",
+    "originalActive": "Il testo originale è visualizzato e si aggiorna quando cambi pagina."
   },
   "pt": {
     "title": "Tradutor de PDF",
@@ -447,7 +531,14 @@ SOFTWARE.
     "uiMemoryOnly": "Mantido até recarregar a página. O texto mantém o idioma selecionado.",
     "textSize": "Tamanho do texto",
     "textSmaller": "Diminuir texto",
-    "textLarger": "Aumentar texto"
+    "textLarger": "Aumentar texto",
+    "sourceLanguage": "Idioma de origem",
+    "originalStart": "Mostrar original",
+    "originalRetry": "Atualizar exibição",
+    "originalReady": "Clique em “{start}” para exibir o texto original.",
+    "originalPreparing": "Preparando o texto original…",
+    "originalTranslating": "Exibindo o texto original…",
+    "originalActive": "O texto original é exibido e atualizado ao mudar de página."
   },
   "ru": {
     "title": "Переводчик PDF",
@@ -478,7 +569,14 @@ SOFTWARE.
     "uiMemoryOnly": "Сохраняется до перезагрузки страницы. Текст слайдов остаётся на выбранном языке.",
     "textSize": "Размер текста",
     "textSmaller": "Уменьшить текст",
-    "textLarger": "Увеличить текст"
+    "textLarger": "Увеличить текст",
+    "sourceLanguage": "Исходный язык",
+    "originalStart": "Показать оригинал",
+    "originalRetry": "Обновить отображение",
+    "originalReady": "Нажмите «{start}», чтобы показать исходный текст.",
+    "originalPreparing": "Подготовка исходного текста…",
+    "originalTranslating": "Отображение исходного текста…",
+    "originalActive": "Отображается исходный текст. Он обновляется при смене страницы."
   },
   "uk": {
     "title": "Перекладач PDF",
@@ -509,7 +607,14 @@ SOFTWARE.
     "uiMemoryOnly": "Зберігається до перезавантаження сторінки. Текст слайдів залишається вибраною мовою.",
     "textSize": "Розмір тексту",
     "textSmaller": "Зменшити текст",
-    "textLarger": "Збільшити текст"
+    "textLarger": "Збільшити текст",
+    "sourceLanguage": "Мова оригіналу",
+    "originalStart": "Показати оригінал",
+    "originalRetry": "Оновити відображення",
+    "originalReady": "Натисніть «{start}», щоб показати оригінальний текст.",
+    "originalPreparing": "Підготовка оригінального тексту…",
+    "originalTranslating": "Відображення оригінального тексту…",
+    "originalActive": "Відображається оригінальний текст. Він оновлюється під час зміни сторінки."
   },
   "ar": {
     "title": "مترجم PDF",
@@ -540,7 +645,14 @@ SOFTWARE.
     "uiMemoryOnly": "يُحفظ حتى إعادة تحميل الصفحة. يظل نص الشريحة باللغة المختارة.",
     "textSize": "حجم النص",
     "textSmaller": "تصغير النص",
-    "textLarger": "تكبير النص"
+    "textLarger": "تكبير النص",
+    "sourceLanguage": "اللغة الأصلية",
+    "originalStart": "عرض النص الأصلي",
+    "originalRetry": "تحديث العرض",
+    "originalReady": "اضغط على «{start}» لعرض النص الأصلي.",
+    "originalPreparing": "جارٍ تجهيز النص الأصلي…",
+    "originalTranslating": "جارٍ عرض النص الأصلي…",
+    "originalActive": "يُعرض النص الأصلي ويتحدث عند تغيير الصفحة."
   },
   "hi": {
     "title": "PDF अनुवादक",
@@ -571,7 +683,14 @@ SOFTWARE.
     "uiMemoryOnly": "पेज दोबारा लोड होने तक रहता है। स्लाइड का पाठ चुनी हुई भाषा में रहता है।",
     "textSize": "पाठ का आकार",
     "textSmaller": "पाठ छोटा करें",
-    "textLarger": "पाठ बड़ा करें"
+    "textLarger": "पाठ बड़ा करें",
+    "sourceLanguage": "मूल भाषा",
+    "originalStart": "मूल पाठ दिखाएँ",
+    "originalRetry": "प्रदर्शन अपडेट करें",
+    "originalReady": "मूल पाठ दिखाने के लिए “{start}” दबाएँ।",
+    "originalPreparing": "मूल पाठ तैयार हो रहा है…",
+    "originalTranslating": "मूल पाठ दिखाया जा रहा है…",
+    "originalActive": "मूल पाठ दिखाया जा रहा है। पेज बदलने पर यह अपडेट होता है।"
   },
   "bn": {
     "title": "PDF অনুবাদক",
@@ -602,7 +721,14 @@ SOFTWARE.
     "uiMemoryOnly": "পৃষ্ঠা পুনরায় লোড করা পর্যন্ত থাকে। স্লাইডের লেখা নির্বাচিত ভাষাতেই থাকে।",
     "textSize": "লেখার আকার",
     "textSmaller": "লেখা ছোট করুন",
-    "textLarger": "লেখা বড় করুন"
+    "textLarger": "লেখা বড় করুন",
+    "sourceLanguage": "মূল ভাষা",
+    "originalStart": "মূল লেখা দেখান",
+    "originalRetry": "প্রদর্শন হালনাগাদ করুন",
+    "originalReady": "মূল লেখা দেখাতে “{start}” চাপুন।",
+    "originalPreparing": "মূল লেখা প্রস্তুত হচ্ছে…",
+    "originalTranslating": "মূল লেখা দেখানো হচ্ছে…",
+    "originalActive": "মূল লেখা দেখানো হচ্ছে। পৃষ্ঠা বদলালে এটি হালনাগাদ হয়।"
   },
   "tr": {
     "title": "PDF çevirmeni",
@@ -633,21 +759,28 @@ SOFTWARE.
     "uiMemoryOnly": "Sayfa yeniden yüklenene kadar korunur. Slayt metni seçilen dilde kalır.",
     "textSize": "Metin boyutu",
     "textSmaller": "Metni küçült",
-    "textLarger": "Metni büyüt"
+    "textLarger": "Metni büyüt",
+    "sourceLanguage": "Kaynak dil",
+    "originalStart": "Orijinali göster",
+    "originalRetry": "Görünümü yenile",
+    "originalReady": "Orijinal metni göstermek için “{start}” düğmesine basın.",
+    "originalPreparing": "Orijinal metin hazırlanıyor…",
+    "originalTranslating": "Orijinal metin gösteriliyor…",
+    "originalActive": "Orijinal metin gösterilir ve sayfa değiştirdiğinizde güncellenir."
   }
 };
   // END_UI_MESSAGES
 
-  const ORIGINAL_MESSAGES = {
-    start: '原文を表示', retry: '表示を更新',
-    ready: '「{start}」を押すと日本語の原文を表示します。',
-    preparing: '原文を準備しています…', translating: '原文を表示しています…',
-    active: '日本語の原文を表示しています。スライドを切り替えると表示が更新されます。'
+  const ORIGINAL_MESSAGE_KEYS = {
+    start: 'originalStart', retry: 'originalRetry', ready: 'originalReady',
+    preparing: 'originalPreparing', translating: 'originalTranslating', active: 'originalActive'
   };
 
   function uiText(language, key, values = {}, original = false) {
     let messages = UI_MESSAGES[language] || UI_MESSAGES.en;
-    if (original && language === 'ja') messages = { ...messages, ...ORIGINAL_MESSAGES };
+    if (original) messages = { ...messages, ...Object.fromEntries(
+      Object.entries(ORIGINAL_MESSAGE_KEYS).map(([key, value]) => [key, messages[value]])
+    ) };
     const parameters = { start: messages.start, ...values };
     return (messages[key] || UI_MESSAGES.en[key] || key)
       .replace(/\{(\w+)\}/g, (placeholder, name) =>
@@ -659,11 +792,11 @@ SOFTWARE.
   }
 
   // 本文の翻訳先と操作表示の言語を分ける。オフ時は操作表示だけを日本語にする。
-  function localizeControls(elements, { language, started, collapsed, translateUi = true }) {
-    const { host, title, target, start, toggle, resizeHandle, orderLabel, orderSelect, orderOptions,
+  function localizeControls(elements, { language, sourceLanguage = 'ja', started, collapsed, translateUi = true }) {
+    const { host, title, sourceLanguageSelect, sourceLanguageLabel, target, targetLabel, start, toggle, resizeHandle, orderLabel, orderSelect, orderOptions,
       uiToggle, uiToggleText, fontLabel, fontSmaller, fontLarger } = elements;
     const selected = uiLanguage(language, translateUi);
-    const text = key => uiText(selected, key, {}, language === 'ja');
+    const text = key => uiText(selected, key, {}, sourceLanguage === language);
     host.lang = selected;
     host.dir = selected === 'ar' ? 'rtl' : 'ltr';
     host.setAttribute('aria-label', text('title'));
@@ -671,6 +804,11 @@ SOFTWARE.
     title.title = text('move');
     title.setAttribute('aria-label', text('move'));
     target.setAttribute('aria-label', text('language'));
+    if (targetLabel) targetLabel.textContent = text('language');
+    if (sourceLanguageSelect) {
+      sourceLanguageSelect.setAttribute('aria-label', text('sourceLanguage'));
+      sourceLanguageLabel.textContent = text('sourceLanguage');
+    }
     start.textContent = text(started ? 'retry' : 'start');
     toggle.textContent = text(collapsed ? 'expand' : 'collapse');
     resizeHandle.title = text('resize');
@@ -1062,6 +1200,7 @@ SOFTWARE.
   function createTranslationController({ onResult, onStatus, onError }) {
     let engine = null;
     let language = '';
+    let sourceLanguage = 'ja';
     let current = [];
     let signature = '';
     let revision = 0;
@@ -1085,6 +1224,7 @@ SOFTWARE.
       const token = revision;
       const activeEngine = engine;
       const activeLanguage = language;
+      const activeSourceLanguage = sourceLanguage;
       const blocks = [...current];
       const abort = new AbortController();
       pending = abort;
@@ -1093,7 +1233,7 @@ SOFTWARE.
       try {
         const translated = [];
         for (const text of blocks) {
-          const key = JSON.stringify([activeLanguage, text]);
+          const key = JSON.stringify([activeSourceLanguage, activeLanguage, text]);
           let result = cache.get(key);
           if (result === undefined) {
             result = await activeEngine.translate(text, { signal: abort.signal });
@@ -1119,16 +1259,17 @@ SOFTWARE.
         if (!force && !refreshLayout && signature === next) return;
         // 「翻訳し直す」では表示中の本文の保存済み訳を破棄し、翻訳を再実行する。
         if (force) {
-          for (const text of blocks) cache.delete(JSON.stringify([language, text]));
+          for (const text of blocks) cache.delete(JSON.stringify([sourceLanguage, language, text]));
         }
         signature = next;
         current = [...blocks];
         void run();
       },
-      attach(translator, targetLanguage) {
+      attach(translator, targetLanguage, fromLanguage = 'ja') {
         cancel();
         engine = translator;
         language = targetLanguage;
+        sourceLanguage = fromLanguage;
         void run();
       },
       detach() {
@@ -1572,6 +1713,9 @@ SOFTWARE.
     }
     #${id} select { appearance: auto; max-width: 100%; }
     #${id} select:disabled { opacity: .5; cursor: default; }
+    #${id} .crp-languages { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; flex: 1 0 100%; min-width: 0; }
+    #${id} .crp-language { display: flex; flex-direction: column; gap: 4px; min-width: 0; font: inherit; }
+    #${id} .crp-language select { width: 100%; min-width: 0; }
     #${id} .crp-order { flex: 1 0 100%; min-width: 0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
     #${id} .crp-font-controls { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font: inherit; }
     #${id} .crp-font-controls button { min-width: 30px; text-align: center; }
@@ -1644,22 +1788,38 @@ SOFTWARE.
     parent.append(element);
     return element;
   }
-  const target = document.createElement('select');
-  for (const [code, label] of [
+  const languages = [
     ['en', 'English'], ['ja', '日本語'], ['zh', '简体中文'], ['zh-Hant', '繁體中文'],
     ['ko', '한국어'], ['vi', 'Tiếng Việt'], ['th', 'ภาษาไทย'],
     ['id', 'Bahasa Indonesia'], ['es', 'Español'], ['fr', 'Français'],
     ['de', 'Deutsch'], ['it', 'Italiano'], ['pt', 'Português'],
     ['ru', 'Русский'], ['uk', 'Українська'], ['ar', 'العربية'],
     ['hi', 'हिन्दी'], ['bn', 'বাংলা'], ['tr', 'Türkçe']
-  ]) {
-    const option = document.createElement('option');
-    option.value = code;
-    option.textContent = label;
-    option.dir = 'auto';
-    target.append(option);
+  ];
+  const languageControls = document.createElement('div');
+  languageControls.className = 'crp-languages';
+  function languageField(name, initial) {
+    const label = document.createElement('label');
+    label.className = 'crp-language';
+    const caption = document.createElement('span');
+    const select = document.createElement('select');
+    select.id = `${id}-${name}`;
+    label.htmlFor = select.id;
+    for (const [code, text] of languages) {
+      const option = document.createElement('option');
+      option.value = code;
+      option.textContent = text;
+      option.dir = 'auto';
+      select.append(option);
+    }
+    select.value = initial;
+    label.append(caption, select);
+    languageControls.append(label);
+    return { select, caption };
   }
-  controls.append(target);
+  const { select: sourceLanguageSelect, caption: sourceLanguageLabel } = languageField('source', 'ja');
+  const { select: target, caption: targetLabel } = languageField('target', 'en');
+  controls.append(languageControls);
   const orderControls = document.createElement('div');
   orderControls.className = 'crp-order';
   const orderLabel = document.createElement('label');
@@ -1721,7 +1881,7 @@ SOFTWARE.
   let statusState = { key: 'ready', values: {}, error: false, detail: '' };
   function renderStatus() {
     const { key, values, error, detail } = statusState;
-    const message = uiText(currentUiLanguage(), key, values, target.value === 'ja');
+    const message = uiText(currentUiLanguage(), key, values, sourceLanguageSelect.value === target.value);
     status.textContent = detail ? `${message}\n${detail}` : message;
     status.classList.toggle('crp-error', error);
     // 普段の案内文は表示せず、処理中・読み取り待ち・エラーのときだけ使う。
@@ -1759,9 +1919,9 @@ SOFTWARE.
   }
 
   function applyUiLanguage() {
-    localizeControls({ host, title, target, start, toggle, resizeHandle, orderLabel, orderSelect, orderOptions,
+    localizeControls({ host, title, sourceLanguageSelect, sourceLanguageLabel, target, targetLabel, start, toggle, resizeHandle, orderLabel, orderSelect, orderOptions,
       uiToggle, uiToggleText, fontLabel, fontSmaller, fontLarger }, {
-      language: target.value, started: Boolean(engine),
+      language: target.value, sourceLanguage: sourceLanguageSelect.value, started: Boolean(engine),
       collapsed: host.classList.contains('crp-collapsed'), translateUi: uiPreference.enabled
     });
     renderStatus();
@@ -1772,7 +1932,8 @@ SOFTWARE.
 
   const start = button(controls, '', async () => {
     const language = target.value;
-    if (language !== 'ja' && !self.Translator?.create) {
+    const sourceLanguage = sourceLanguageSelect.value;
+    if (sourceLanguage !== language && !self.Translator?.create) {
       showStatus('unavailable', {}, true);
       return;
     }
@@ -1784,12 +1945,13 @@ SOFTWARE.
     const token = ++initialization;
     start.disabled = true;
     target.disabled = true;
+    sourceLanguageSelect.disabled = true;
     showStatus('preparing');
     try {
       // クリック直後に作成する。事前にawaitするとユーザー操作の有効期間が切れることがある。
-      // 日本語の資料を日本語で読む場合、翻訳モデルを呼ばず原文をそのまま表示する。
-      const created = language === 'ja' ? { translate: async text => text, destroy() {} } : await self.Translator.create({
-        sourceLanguage: 'ja', targetLanguage: language,
+      // 翻訳元と翻訳先が同じ場合、翻訳モデルを呼ばず原文をそのまま表示する。
+      const created = sourceLanguage === language ? { translate: async text => text, destroy() {} } : await self.Translator.create({
+        sourceLanguage, targetLanguage: language,
         monitor(monitor) {
           monitor.addEventListener('downloadprogress', event => {
             if (token !== initialization || disposed) return;
@@ -1804,7 +1966,7 @@ SOFTWARE.
       engine = created;
       // ダウンロード待ちの間にページが変わった場合も、現在の本文を使う。
       updateSource();
-      translation.attach(engine, language);
+      translation.attach(engine, language, sourceLanguage);
       applyUiLanguage();
     } catch (error) {
       if (!disposed && token === initialization) showError(error);
@@ -1812,6 +1974,7 @@ SOFTWARE.
       if (!disposed && token === initialization) {
         start.disabled = false;
         target.disabled = false;
+        sourceLanguageSelect.disabled = false;
       }
     }
   });
@@ -1830,16 +1993,21 @@ SOFTWARE.
     updateSource(false, source);
     keepPanelInView();
   });
-  target.addEventListener('change', () => {
+  function changeLanguages() {
     initialization += 1;
     translation.detach();
     engine?.destroy();
     engine = null;
+    start.disabled = false;
+    target.disabled = false;
+    sourceLanguageSelect.disabled = false;
     applyUiLanguage();
     showResult([], target.value);
     showStatus('ready');
     keepPanelInView();
-  });
+  }
+  target.addEventListener('change', changeLanguages);
+  sourceLanguageSelect.addEventListener('change', changeLanguages);
   const toggle = button(toolbar, '', () => {
     const collapsed = host.classList.toggle('crp-collapsed');
     for (const element of [controls, status, body]) element.hidden = collapsed;
