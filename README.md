@@ -1,13 +1,17 @@
 # 授業資料 翻訳ツール
 
+**[導入ガイドを開く — 使い方とコードのコピーはこちら](https://xhan21.github.io/class-material-translator/)**
+
+学生への案内には、上の公開ページのリンクを共有してください。
+
 [HAN](https://www.i-u.ac.jp/academics/faculty/hanxu/)が担当する授業向けに試運用している、Canva資料とClassroomで配布されたPDFの翻訳ツールです。
 
 授業資料を開いたまま、右側のパネルに訳文を表示します。パソコン版ChromeとTampermonkeyで利用します。
 
 ## 導入ガイド
 
-- [Canva・PDF共通の導入ガイド](index.html)
-- [Canva版の19言語対応ガイド](canva-translation-guide.html)
+- [Canva・PDF共通の導入ガイド](https://xhan21.github.io/class-material-translator/)
+- [Canva版の19言語対応ガイド](https://xhan21.github.io/class-material-translator/canva-translation-guide.html)
 - [Googleサイトに貼り付けるHTMLコード](class-material-translation-google-sites.txt)
 
 初めての方は導入ガイドの手順01から、同じChromeでTampermonkeyのスクリプトがすでに動いている方は手順04から進めてください。
