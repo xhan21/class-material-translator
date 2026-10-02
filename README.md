@@ -4,7 +4,7 @@
 
 学生への案内には、上の公開ページのリンクを共有してください。Canva版・PDF版それぞれの導入手順と、コードのコピーボタンがあります。
 
-[HAN](https://www.i-u.ac.jp/academics/faculty/hanxu/)が担当する授業向けに試運用している、Canva資料とClassroomで配布されたPDFの翻訳ツールです。
+[韓](https://www.i-u.ac.jp/academics/faculty/hanxu/)が担当する授業向けに試運用している、Canva資料とClassroomで配布されたPDFの翻訳ツールです。
 
 ## Tampermonkeyに貼り付けるコード
 
