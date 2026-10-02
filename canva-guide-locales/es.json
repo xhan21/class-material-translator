@@ -1,0 +1,154 @@
+{
+  "languageLabel": "Idioma de la guía / Language",
+  "guideHint": "Esto cambia el idioma de la guía. El idioma de las diapositivas se elige en Canva.",
+  "title": "Traductor de diapositivas de Canva: guía de instalación",
+  "author": "Han",
+  "course": "Guía del traductor de Canva en fase de prueba para las clases de {author} en la Universidad iU. Actualmente solo admite enlaces de visualización de Canva.",
+  "intro": "Lee diapositivas en japonés en un panel separado, en el idioma elegido. Se actualiza al cambiar de diapositiva. También muestra el original japonés y conserva números y colores cuando puede obtenerlos.",
+  "tags": [
+    "Chrome para ordenador",
+    "Usa Tampermonkey",
+    "Código incluido v2.8.0 · Prueba"
+  ],
+  "nav": [
+    "Instalación",
+    "Copiar código",
+    "Uso",
+    "Solución de problemas"
+  ],
+  "navLabel": "Navegación de la guía",
+  "update": "¿Ya está instalado? Ve al paso 04, sustituye todo el código del script existente, guarda y recarga Canva.",
+  "stepTitles": [
+    "Prepara Chrome para ordenador",
+    "Instala Tampermonkey",
+    "Permite scripts de usuario",
+    "Instala o actualiza el código",
+    "Abre un enlace de visualización de Canva",
+    "Elige un idioma y comienza"
+  ],
+  "step1": [
+    "Usa Google Chrome 138 o posterior en un ordenador. Normalmente basta con actualizar a la última versión.",
+    "La traducción no admite teléfonos. La configuración del dispositivo o del administrador también puede limitarla."
+  ],
+  "chromeReference": "Documentación oficial de Chrome ↗",
+  "step2": "En Chrome Web Store, selecciona «Añadir a Chrome» y después «Añadir extensión». Si ya está instalado, continúa.",
+  "install": "Abrir Tampermonkey ↗",
+  "step3": [
+    "Introduce la dirección de arriba en la barra de direcciones de Chrome.",
+    "Abre «Detalles» de Tampermonkey.",
+    "Activa «Permitir scripts de usuario»."
+  ],
+  "tampermonkeyReference": "Instrucciones oficiales de Tampermonkey ↗",
+  "step4Intro": "Para actualizar, abre el script existente y sustituye todo su código; no crees otro.",
+  "step4": [
+    "Pulsa «Copiar código» abajo.",
+    "Abre Tampermonkey desde las extensiones de Chrome, arriba a la derecha, y elige «Crear un nuevo script».",
+    "Selecciona y elimina todo el código inicial del editor.",
+    "Pega el código y guarda con ⌘+S (Mac) o Ctrl+S (Windows)."
+  ],
+  "copy": "Copiar código",
+  "download": "Guardar código",
+  "showCode": "Mostrar código / copiar manualmente",
+  "manualCopy": "Haz clic en el código. Usa ⌘+A → ⌘+C (Mac) o Ctrl+A → Ctrl+C (Windows).",
+  "codeLabel": "Código para pegar en Tampermonkey",
+  "enabled": "Después de guardar, comprueba que el siguiente script esté activo en el panel de control. Desactiva los antiguos scripts de traducción de Canva.",
+  "step5": [
+    "Abre en Chrome el enlace compartido de visualización del material. Si ya está abierto, recárgalo.",
+    "Aparece el panel «Slide translator». La herramienta no funciona en el editor de Canva."
+  ],
+  "step6": [
+    "Elige en el panel el idioma que quieras leer, por ejemplo English.",
+    "Pulsa «{start}». Para japonés, elige 日本語 y pulsa «{original}» (mostrar original).",
+    "Cuando aparezca el texto, cambia de diapositiva para continuar. El panel se actualiza automáticamente."
+  ],
+  "downloadNote": "La primera traducción puede tardar en descargar datos de idioma. El original japonés no necesita esa descarga.",
+  "restartNote": "Tras recargar o cambiar el idioma del texto, vuelve a pulsar el botón de inicio.",
+  "usageTitle": "Uso del panel",
+  "usageIntro": "Los nombres siguientes corresponden al idioma de esta guía, con la traducción de botones activada. Al desactivarla, los botones aparecen en japonés.",
+  "headers": [
+    "Qué quieres hacer",
+    "Acción"
+  ],
+  "rows": [
+    [
+      "Mover el panel",
+      "Arrastra la zona del título superior."
+    ],
+    [
+      "Cambiar el tamaño",
+      "Arrastra «↙» en la esquina inferior izquierda."
+    ],
+    [
+      "Volver a traducir",
+      "Pulsa «{retry}». Para el original japonés, usa «{refresh}» (actualizar)."
+    ],
+    [
+      "Cambiar el idioma del texto",
+      "Elige otro idioma y pulsa el botón de inicio."
+    ],
+    [
+      "Minimizar o expandir",
+      "Pulsa «{collapse}» y restaura con «{expand}»."
+    ],
+    [
+      "Cambiar el idioma de botones",
+      "Marca o desmarca «{translateUi}». Activado: idioma del texto. Desactivado: japonés. El idioma del texto no cambia."
+    ],
+    [
+      "Leer el original japonés",
+      "Elige 日本語 y pulsa «{original}» (mostrar original)."
+    ],
+    [
+      "Leer la columna izquierda y luego la derecha",
+      "En «{pageOrder}», elige «{orderColumns}». Para volver, selecciona «{orderRows}»."
+    ],
+    [
+      "Cambiar el tamaño del texto",
+      "Pulsa ＋ o − en Tamaño del texto. Rango: 12–32 px; valor inicial: 17 px. Se guarda si el navegador permite el almacenamiento."
+    ]
+  ],
+  "usageNotes": [
+    "Solo se muestra el estado al procesar, esperar texto o detectar errores. Las indicaciones habituales están ocultas.",
+    "El idioma de botones se comparte entre las diapositivas de este navegador. El orden se guarda por diapositiva; por defecto es por filas.",
+    "Tras editar el texto, vuelve a elegir el orden. Las páginas del mismo diseño indistinguibles por texto y enlace comparten ajustes. Si se restringe el almacenamiento, duran hasta la recarga. Pasa el cursor sobre el selector o la casilla para ver detalles."
+  ],
+  "helpTitle": "Solución de problemas",
+  "help": [
+    [
+      "No aparece el panel",
+      "Comprueba que el script y «Permitir scripts de usuario» estén activos y que uses un enlace de visualización; recarga Canva."
+    ],
+    [
+      "No aparecen instrucciones",
+      "Es normal. Elige un idioma y pulsa el botón de inicio."
+    ],
+    [
+      "Aparece un error",
+      "Lee el mensaje. Chrome o el administrador pueden restringir la traducción integrada."
+    ],
+    [
+      "Faltan letras o números",
+      "Se excluye el texto dentro de imágenes. Las listas normales conservan números, símbolos y sangría anidada, pero la numeración personalizada o ciertas estructuras pueden no leerse. Los números no se traducen."
+    ],
+    [
+      "Se mezclan las columnas",
+      "Cambia «{pageOrder}» a «{orderColumns}». Si no se detecta un límite claro, se mantiene el orden por filas."
+    ],
+    [
+      "Frases de colores poco naturales",
+      "Cada color se traduce por separado y puede alterar la redacción. Se puede añadir un fondo a los textos claros."
+    ],
+    [
+      "Reintentar no cambia el texto",
+      "La nueva traducción puede dar el mismo resultado."
+    ]
+  ],
+  "footer": "Actualizado el 2 de octubre de 2026 · Código v2.8.0 incluido. Versión de prueba; puede no funcionar con ciertas diapositivas o entornos.",
+  "messages": {
+    "ready": "Código incluido v2.8.0 / canva-reading-panel.user.js",
+    "copied": "Copiado. Pégalo en el editor de Tampermonkey.",
+    "manual": "Código seleccionado. Pulsa ⌘+C (Mac) o Ctrl+C (Windows).",
+    "saved": "Descarga solicitada. Si no se guarda el archivo, usa «Copiar código».",
+    "saveFailed": "No se pudo iniciar la descarga. Usa «Copiar código» o copia manualmente."
+  }
+}

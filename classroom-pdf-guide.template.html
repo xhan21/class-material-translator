@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Canva資料とGoogle Classroomで配布されたPDFの翻訳ツール導入ガイド。共通の準備と、それぞれのコード・使い方を案内します。">
+<title>授業資料 翻訳ツール導入ガイド｜Canva・Classroom PDF</title>
+<style>
+__CSS__
+.start-paths{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}
+.start-path{display:flex;flex-direction:column;gap:8px;padding:18px;border:1px solid #b9cdeb;border-radius:12px;background:#fff;text-decoration:none}
+.start-path strong{font-size:16px}.start-path span{color:var(--muted);font-size:14px}.start-path b{margin-top:auto;font-size:14px}
+.start-path:hover{background:#f4f8ff}.start-panel{margin:0 0 26px}.start-panel h2{margin-top:0}
+h3{font-size:17px;line-height:1.6;margin:26px 0 10px}.branch{border-inline-start:3px solid var(--line);padding-inline-start:18px}
+.address{display:block;width:100%;max-width:400px;border:1px solid #b9cdeb;border-radius:8px;background:#f4f7fb;color:var(--ink);padding:12px;font:15px ui-monospace,monospace;margin:12px 0}
+.after-save{margin-top:20px;padding:14px 16px;background:#edf5ff;border-radius:10px}
+section, .branch{scroll-margin-top:24px}.languages{font-size:14px;color:var(--muted)}
+.tool-card{margin-top:22px;padding:22px;border:1px solid #b9cdeb;border-radius:12px;background:#f9fbfe;scroll-margin-top:24px}
+.tool-card h3{margin-top:0}.tool-card .tool-version{color:var(--muted);font-size:13px;font-weight:400}
+.tool-card .script-name{font-size:14px}.tool-card textarea{background:#102231}.tool-card .actions{margin-top:14px}
+.tool-links{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0}.tool-links a{font-size:14px;font-weight:600}
+@media(max-width:700px){.start-paths{grid-template-columns:1fr}.start-path{gap:4px}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+<p class="eyebrow">授業資料を、自分の読みやすい言語で</p>
+<h1>授業資料 翻訳ツール<br>導入ガイド</h1>
+<p class="course-context">iU大学で<a href="https://xuhan.jp/" target="_blank" rel="noopener noreferrer">韓</a>が担当する授業向けに試運用している翻訳ツールの導入ガイドです。<strong>Canvaの閲覧用資料</strong>と、<strong>Google Classroomで配布されたPDF</strong>に対応しています。</p>
+<p class="intro">日本語の資料を開いたまま、右側のパネルに訳文を表示します。ページを変えると訳文も更新されます。PDFを保存したり、別のサービスへアップロードしたりする操作は不要です。</p>
+<div class="tags"><span class="tag">パソコン版Chrome用</span><span class="tag">19言語</span><span class="tag">Tampermonkeyを使用・試用版</span></div>
+<nav aria-label="ガイド内の移動"><a href="#start">どこから始める？</a><a href="#canva-code">Canva版のコード</a><a href="#pdf-code">PDF版のコード</a><a href="#step5">資料別の使い方</a><a href="#help">うまく動かないとき</a></nav>
+</div></header>
+
+<main class="wrap">
+<section id="start" class="panel start-panel" aria-labelledby="start-title">
+<h2 id="start-title">ご自身の状況に合わせて始めてください</h2>
+<div class="start-paths">
+<a class="start-path" href="#step1"><strong>初めて利用する方</strong><span>Tampermonkeyをまだ追加していない</span><b>手順01から →</b></a>
+<a class="start-path" href="#step3"><strong>追加だけ済んでいる方</strong><span>Tampermonkeyはあるが、まだ使ったことがない</span><b>手順03から →</b></a>
+<a class="start-path" href="#step4"><strong>すでに使えている方</strong><span>Canva版・PDF版などが同じChromeで動いている</span><b>手順04から →</b></a>
+</div>
+<p class="small">登録済みのツールを更新する方は、<a href="#update">手順04の「登録済みのコードを更新する場合」</a>へ進んでください。</p>
+<p class="small">Tampermonkeyの準備（手順01〜03）は共通です。両方の資料を使う方は、手順04で<strong>Canva版とPDF版を別々のスクリプトとして登録</strong>します。</p>
+</section>
+
+<section class="step" id="step1" aria-labelledby="title1"><div class="number" aria-hidden="true">01</div><div>
+<h2 id="title1">パソコン版Chromeを用意する</h2>
+<p>このツールはパソコン版Google Chromeで使います。スマートフォンやタブレットのChromeには対応していません。</p>
+<ol>
+<li>授業資料を読むパソコンで、<strong>Google Chrome</strong>を開きます。</li>
+<li>Chromeは<strong>138以降</strong>が必要です。古い場合は、Chromeのメニューから「ヘルプ」→「Google Chromeについて」を開き、更新します。Macでは上部メニューの「Chrome」→「Google Chromeについて」からも確認できます。</li>
+<li>学校用と個人用のプロフィールを分けている場合は、<strong>CanvaやClassroomの授業資料を読むプロフィール</strong>で、続きの操作をしてください。</li>
+</ol>
+<p class="small">すでに最新版のChromeで授業資料を開いている場合は、そのまま次へ進みます。<a href="https://developer.chrome.com/docs/ai/translator-api" target="_blank" rel="noopener noreferrer">Chromeの翻訳機能について（公式）</a></p>
+</div></section>
+
+<section class="step" id="step2" aria-labelledby="title2"><div class="number" aria-hidden="true">02</div><div>
+<h2 id="title2">Tampermonkeyを追加する</h2>
+<p>Tampermonkeyは、これから登録する翻訳ツールのコードをChromeで動かすための拡張機能です。追加済みの方は<a href="#step3">手順03</a>へ進みます。</p>
+<ol>
+<li>下のボタンから、ChromeウェブストアのTampermonkeyのページを開きます。</li>
+<li>「<strong>Chromeに追加</strong>」を押します。</li>
+<li>確認画面で「<strong>拡張機能を追加</strong>」を押します。</li>
+<li>追加が終わったら、この導入ガイドに戻ります。</li>
+</ol>
+<div class="actions"><a class="button" href="https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo" target="_blank" rel="noopener noreferrer">Tampermonkeyを追加する ↗</a></div>
+<p class="small">「Chromeから削除」と表示されている場合は、すでに追加されています。Chrome右上のパズル形の「拡張機能」からTampermonkeyを探せます。ピンのボタンを押すと、アイコンを常に表示できます。</p>
+</div></section>
+
+<section class="step" id="step3" aria-labelledby="title3"><div class="number" aria-hidden="true">03</div><div>
+<h2 id="title3">スクリプトの実行を許可する</h2>
+<p>Tampermonkeyを追加しただけでは、翻訳ツールを動かせない場合があります。Chromeの設定で、スクリプトの実行を許可します。</p>
+<ol>
+<li>Chromeで新しいタブを開き、次の文字を<strong>画面上部のアドレスバー</strong>に入力してEnterキーを押します。検索欄ではなく、URLが表示される欄です。
+<input class="address" type="text" value="chrome://extensions" readonly aria-label="Chromeの拡張機能設定のアドレス" translate="no" dir="ltr"></li>
+<li>拡張機能の一覧から「<strong>Tampermonkey</strong>」を探します。無効になっている場合は、有効にします。</li>
+<li>Tampermonkeyの「<strong>詳細</strong>」を開きます。</li>
+<li>「<strong>ユーザースクリプトを許可</strong>」をオンにします。英語表示の場合は「Allow User Scripts」です。</li>
+<li>この導入ガイドに戻ります。</li>
+</ol>
+<p class="small">同じChromeプロフィールでCanva版などがすでに動いていれば、通常、この設定は済んでいます。項目が見つからない場合はChromeを更新し、<a href="https://www.tampermonkey.net/faq.php?q=Q209" target="_blank" rel="noopener noreferrer">Tampermonkey公式の設定手順</a>も確認してください。</p>
+</div></section>
+
+<section class="step" id="step4" aria-labelledby="title4"><div class="number" aria-hidden="true">04</div><div>
+<h2 id="title4">資料に合うコードを登録する</h2>
+<p>開いた先が<strong>Canvaの閲覧画面ならCanva版</strong>、<strong>PDFの閲覧画面ならPDF版</strong>を選びます。Classroomに貼られたCanvaのリンクを開く場合も、使うのはCanva版です。</p>
+<p>必要な方だけ登録できます。両方使う場合は、<strong>1つずつ、別々のスクリプトとして登録</strong>してください。2つのコードを1つの編集欄に続けて貼り付ける必要はありません。</p>
+
+<article class="tool-card" id="canva-code" aria-labelledby="canva-code-title">
+<h3 id="canva-code-title">Canva資料用 <span class="tool-version">v__CANVA_VERSION__</span></h3>
+<p>Canvaの<strong>閲覧用リンク</strong>で開くスライドに使います。Canvaの編集画面には対応していません。</p>
+<p class="script-name">登録する名前：<strong>Canva 閲覧用テキストパネル（試用版）</strong></p>
+<div class="actions"><button class="button" id="copy-canva-code" type="button">Canva版のコードをコピー</button><a class="button secondary" href="#canva-use">Canvaでの使い方</a></div>
+<p class="status" id="copy-canva-status" role="status">Canva版 v__CANVA_VERSION__</p>
+<details class="source-code" id="source-canva-details"><summary>Canva版のコードを表示・手動でコピーする</summary>
+<p class="small">コード欄をクリックし、⌘＋A → ⌘＋C（Mac）、またはCtrl＋A → Ctrl＋C（Windows）でコピーできます。</p>
+<textarea id="source-canva-code" translate="no" class="notranslate" readonly spellcheck="false" wrap="off" dir="ltr" aria-label="Tampermonkeyに登録するCanva版のコード">__CANVA_SOURCE__</textarea></details>
+</article>
+
+<article class="tool-card" id="pdf-code" aria-labelledby="pdf-code-title">
+<h3 id="pdf-code-title">Classroomで配布されたPDF用 <span class="tool-version">v__PDF_VERSION__</span></h3>
+<p><strong>Classroom内のPDFプレビュー</strong>や、<strong>Google DriveのPDF閲覧画面</strong>で使います。PDFのダウンロードは不要です。</p>
+<p class="script-name">登録する名前：<strong>Classroom PDF 翻訳パネル（試用版）</strong></p>
+<div class="actions"><button class="button" id="copy-pdf-code" type="button">PDF版のコードをコピー</button><a class="button secondary" href="#pdf-use">PDFでの使い方</a></div>
+<p class="status" id="copy-pdf-status" role="status">PDF版 v__PDF_VERSION__</p>
+<details class="source-code" id="source-pdf-details"><summary>PDF版のコードを表示・手動でコピーする</summary>
+<p class="small">コード欄をクリックし、⌘＋A → ⌘＋C（Mac）、またはCtrl＋A → Ctrl＋C（Windows）でコピーできます。</p>
+<textarea id="source-pdf-code" translate="no" class="notranslate" readonly spellcheck="false" wrap="off" dir="ltr" aria-label="Tampermonkeyに登録するPDF版のコード">__PDF_SOURCE__</textarea></details>
+</article>
+<noscript><p class="small">コピーのボタンを使えません。使いたい版の「コードを表示・手動でコピーする」を開いてコピーしてください。</p></noscript>
+
+<div class="branch" id="new-install"><h3>選んだツールを初めて登録する場合</h3>
+<ol>
+<li>使いたい方の「<strong>Canva版のコードをコピー</strong>」または「<strong>PDF版のコードをコピー</strong>」を押します。「コピーしました」と表示されることを確認します。</li>
+<li>Chrome右上のパズル形の「<strong>拡張機能</strong>」から「<strong>Tampermonkey</strong>」を開きます。アイコンを固定している場合は、直接クリックできます。</li>
+<li>「<strong>新規スクリプトを追加</strong>」を選びます。英語表示の場合は「Create a new script」です。</li>
+<li>開いた<strong>コードの編集欄をクリック</strong>し、<kbd>⌘＋A</kbd>（Mac）または<kbd>Ctrl＋A</kbd>（Windows）ですべて選択します。</li>
+<li><kbd>⌘＋V</kbd>（Mac）または<kbd>Ctrl＋V</kbd>（Windows）を押し、最初からあるコード全体をコピーしたコードに置き換えます。前後に元のコードを残さないでください。</li>
+<li><kbd>⌘＋S</kbd>（Mac）または<kbd>Ctrl＋S</kbd>（Windows）で保存します。</li>
+<li>Tampermonkeyの「<strong>ダッシュボード</strong>」を開き、コピーした版の名前が表示され、<strong>有効になっている</strong>ことを確認します。名前は上の各コード欄に記載しています。</li>
+</ol>
+<p class="small">もう一方も使う場合は、そのコードをコピーし、もう一度「新規スクリプトを追加」から登録します。すでに動いている版は、追加のために更新する必要はありません。</p>
+</div>
+
+<div class="branch" id="update"><h3>登録済みのコードを更新する場合</h3>
+<ol>
+<li>更新する方のコードをコピーします。<a href="#canva-code">Canva版のコード</a>／<a href="#pdf-code">PDF版のコード</a></li>
+<li>Tampermonkeyの「<strong>ダッシュボード</strong>」を開き、<strong>コピーした版と同じ名前の登録済みスクリプト</strong>を選びます。新規作成は不要です。</li>
+<li>編集欄をクリックし、<kbd>⌘＋A</kbd> → <kbd>⌘＋V</kbd>（Mac）、または<kbd>Ctrl＋A</kbd> → <kbd>Ctrl＋V</kbd>（Windows）でコード全体を置き換えます。</li>
+<li><kbd>⌘＋S</kbd>（Mac）または<kbd>Ctrl＋S</kbd>（Windows）で保存します。</li>
+</ol>
+</div>
+<p class="after-save"><strong>保存したら：</strong>すでに資料を開いているタブは、一度再読み込みしてから使ってください。新しいコードが反映されます。</p>
+
+</div></section>
+
+<section class="step" id="step5" aria-labelledby="title5"><div class="number" aria-hidden="true">05</div><div>
+<h2 id="title5">資料の種類に合わせて翻訳を始める</h2>
+<div class="tool-links"><a href="#canva-use">Canva資料の場合 →</a><a href="#pdf-use">ClassroomのPDFの場合 →</a></div>
+<article class="tool-card" id="canva-use" aria-labelledby="canva-use-title"><h3 id="canva-use-title">Canva資料の場合</h3>
+<ol>
+<li>授業で共有された<strong>Canvaの閲覧用リンク</strong>をChromeで開きます。編集用リンクでは動作しません。</li>
+<li>右側に表示される「<strong>Slide translator</strong>」パネルで、Englishなど読みたい言語を選びます。</li>
+<li>「<strong>Start translation（翻訳を開始）</strong>」を押します。</li>
+<li>スライドを切り替えると、訳文も自動で更新されます。</li>
+</ol>
+<p class="small">Canvaの資料がClassroomでリンクとして配布されている場合も、開いた先がCanvaならこちらの手順です。</p>
+</article>
+<article class="tool-card" id="pdf-use" aria-labelledby="pdf-use-title"><h3 id="pdf-use-title">Classroomで配布されたPDFの場合</h3>
+<ol>
+<li>授業で配布された<strong>PDFをClassroom内で開きます</strong>。Google DriveのPDF閲覧画面でも利用できます。</li>
+<li>右側に表示される「<strong>PDF translator</strong>」パネルで、Englishなど読みたい言語を選びます。</li>
+<li>「<strong>Start translation（翻訳を開始）</strong>」を押します。</li>
+<li>PDFのページを変えると、訳文も自動で更新されます。PDFを保存・アップロードする操作は不要です。</li>
+</ol>
+<p class="small">画像だけで構成されたPDFには対応していません。</p>
+</article>
+<h3>どちらのツールも共通</h3>
+<p>日本語を選んだ場合は、「<strong>原文を表示</strong>」を押すと日本語のまま表示できます。ボタンの翻訳がオンの場合、ボタン名は選んだ言語に合わせて変わります。</p>
+<p class="small">初回はChromeが翻訳用の言語データを取得するため、少し時間がかかる場合があります。再読み込み後や言語変更後は、開始ボタンをもう一度押してください。翻訳にはChromeの内蔵機能を使用します。</p>
+<details><summary>対応する19言語を見る</summary><p class="languages">日本語・英語・中国語（簡体字／繁体字）・韓国語・ベトナム語・タイ語・インドネシア語・スペイン語・フランス語・ドイツ語・イタリア語・ポルトガル語・ロシア語・ウクライナ語・アラビア語・ヒンディー語・ベンガル語・トルコ語。</p></details>
+</div></section>
+
+<section class="panel" id="usage" aria-labelledby="usage-title"><h2 id="usage-title">利用中の操作</h2>
+<p class="small">下のボタン名は英語表示の例です。ボタンの翻訳をオンにすると、選択した言語で表示されます。</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">やりたいこと</th><th scope="col">操作</th></tr></thead><tbody>
+<tr><td>パネルを移動する</td><td>上部のタイトル付近をドラッグします。Canva版・PDF版ともに、起動時は右側に表示されます。</td></tr>
+<tr><td>大きさを変える</td><td>Canva版・PDF版ともに、左下の「↙」をドラッグします。</td></tr>
+<tr><td>文字を大きく・小さくする</td><td>「Text size（文字サイズ）」の「＋」で大きく、「−」で小さくします。本文と番号の大きさを12〜32 pxの範囲で調整できます。初期値は17 pxです。通常、選んだ大きさは同じブラウザー・同じサイトで次回も引き継がれます。</td></tr>
+<tr><td>もう一度翻訳する</td><td>「Translate again」を押します。日本語の原文表示では「表示を更新」です。</td></tr>
+<tr><td>本文の言語を変える</td><td>言語を選び直し、開始ボタンを押します。</td></tr>
+<tr><td>小さく畳む・戻す</td><td>「Minimize」で畳み、「Expand」で戻します。</td></tr>
+<tr><td>ボタンの言語を変える</td><td>「Translate buttons and messages」のチェックを切り替えます。オン：選択した言語／オフ：日本語。</td></tr>
+<tr><td>読む順番を変える</td><td>Canva版では「Reading order (this slide)」、PDF版では「Reading order (this page)」で選びます。「Column order (left → right)」は左列→右列、「Row order」は上の行から順に読みます。初期設定はCanva版が行順、PDF版が列順です。設定はページごとに保存されます。</td></tr>
+</tbody></table></div>
+</section>
+
+<section class="panel" id="help" aria-labelledby="help-title"><h2 id="help-title">うまく動かないとき</h2>
+<dl class="trouble">
+<dt>パネルが出ない</dt><dd>資料に合う版を登録したか確認します。Canva資料にはCanva版、PDFにはPDF版が必要です。資料を読むChromeのプロフィールで、該当のスクリプトと「ユーザースクリプトを許可」を有効にし、資料のタブを再読み込みしてください。Canvaの編集画面では動作しません。</dd>
+<dt>Tampermonkeyのアイコンに赤い「1」が出る</dt><dd>実行されたスクリプトの数を示す表示です。赤い「1」自体はエラーではありません。<a href="https://www.tampermonkey.net/" target="_blank" rel="noopener noreferrer">公式説明</a></dd>
+<dt>文字が表示されない・エラーが出る</dt><dd>資料の読み込みを待ち、開始ボタンを押してください。どちらの版も画像に含まれる文字は翻訳対象外です。Chromeや学校の管理設定によって、翻訳機能を利用できない場合もあります。</dd>
+<dt>番号や文字色が元の資料と違う</dt><dd>番号は取得できる範囲で反映します。Canva版は文字の色情報を読み取ります。PDF版は行・段落ごとの代表色を画像から推定し、文中の一部分だけの色分けには未対応です。PDFの色を取得できない場合は濃いグレーで表示します。</dd>
+<dt>Googleサイト上でコードのコピーができない</dt><dd>使いたい版の「コードを表示・手動でコピーする」を開きます。コード欄をクリックし、⌘＋A → ⌘＋C（Mac）、またはCtrl＋A → Ctrl＋C（Windows）でコピーしてください。</dd>
+</dl>
+</section>
+<p class="small after-code">このツールは日本語の授業資料を読むための試用版です。資料の構成や利用環境によっては、文字・読み順・色を正しく反映できない場合があります。</p>
+</main>
+<footer><div class="wrap">2026年10月2日更新 · Canva版 v__CANVA_VERSION__ ／ PDF版 v__PDF_VERSION__</div></footer>
+<script>
+for (const kind of ['canva', 'pdf']) {
+ document.getElementById(`copy-${kind}-code`).addEventListener('click', async () => {
+  const source = document.getElementById(`source-${kind}-code`);
+  const status = document.getElementById(`copy-${kind}-status`);
+  const label = kind === 'canva' ? 'Canva版' : 'PDF版';
+  try {
+    await navigator.clipboard.writeText(source.value);
+    status.textContent = `${label}のコードをコピーしました。Tampermonkeyの${label}スクリプトに貼り付けて保存してください。`;
+  } catch {
+    document.getElementById(`source-${kind}-details`).open = true;
+    source.focus(); source.select();
+    status.textContent = `${label}のコードを選択しました。⌘＋C（Mac）またはCtrl＋C（Windows）でコピーしてください。`;
+  }
+ });
+}
+</script>
+</body></html>

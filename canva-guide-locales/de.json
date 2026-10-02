@@ -1,0 +1,154 @@
+{
+  "languageLabel": "Sprache der Anleitung / Language",
+  "guideHint": "Hier ändern Sie die Sprache der Anleitung. Die Sprache der Folien wählen Sie in Canva.",
+  "title": "Canva-Folienübersetzer: Installationsanleitung",
+  "author": "Han",
+  "course": "Anleitung zum Canva-Übersetzer, der in den Lehrveranstaltungen von {author} an der iU-Universität erprobt wird. Unterstützt derzeit nur Canva-Ansichtslinks.",
+  "intro": "Lesen Sie japanische Folien in einem separaten Fenster in Ihrer Sprache. Der Inhalt folgt dem Folienwechsel. Auch das japanische Original ist verfügbar. Nummern und Textfarben werden übernommen, soweit sie ausgelesen werden können.",
+  "tags": [
+    "Chrome auf dem Computer",
+    "Mit Tampermonkey",
+    "Enthaltener Code v2.8.0 · Testversion"
+  ],
+  "nav": [
+    "Einrichtung",
+    "Code kopieren",
+    "Bedienung",
+    "Problemlösung"
+  ],
+  "navLabel": "Navigation der Anleitung",
+  "update": "Bereits installiert? Gehen Sie zu Schritt 04, ersetzen Sie den gesamten vorhandenen Skriptcode, speichern Sie und laden Sie Canva neu.",
+  "stepTitles": [
+    "Chrome auf dem Computer vorbereiten",
+    "Tampermonkey installieren",
+    "Nutzerskripts zulassen",
+    "Code installieren oder aktualisieren",
+    "Canva-Ansichtslink öffnen",
+    "Sprache wählen und starten"
+  ],
+  "step1": [
+    "Verwenden Sie Google Chrome ab Version 138 auf einem Computer. Meist genügt ein Update auf die neueste Version.",
+    "Die Übersetzung unterstützt keine Smartphones. Geräte- oder Administratoreinstellungen können sie ebenfalls einschränken."
+  ],
+  "chromeReference": "Offizielle Chrome-Dokumentation ↗",
+  "step2": "Wählen Sie im Chrome Web Store „Hinzufügen“ und anschließend „Erweiterung hinzufügen“. Falls schon installiert, fahren Sie fort.",
+  "install": "Tampermonkey öffnen ↗",
+  "step3": [
+    "Geben Sie die obige Adresse in die Chrome-Adressleiste ein.",
+    "Öffnen Sie bei Tampermonkey „Details“.",
+    "Aktivieren Sie „Nutzerskripts zulassen“."
+  ],
+  "tampermonkeyReference": "Offizielle Tampermonkey-Anleitung ↗",
+  "step4Intro": "Zum Aktualisieren öffnen Sie das vorhandene Skript und ersetzen den gesamten Code. Erstellen Sie kein weiteres Skript.",
+  "step4": [
+    "Klicken Sie unten auf „Code kopieren“.",
+    "Öffnen Sie Tampermonkey über die Chrome-Erweiterungen oben rechts und wählen Sie „Neues Skript erstellen“.",
+    "Markieren und löschen Sie den gesamten voreingestellten Code im Editor.",
+    "Fügen Sie den Code ein und speichern Sie mit ⌘+S (Mac) oder Strg+S (Windows)."
+  ],
+  "copy": "Code kopieren",
+  "download": "Code speichern",
+  "showCode": "Code anzeigen / manuell kopieren",
+  "manualCopy": "Klicken Sie in das Codefeld. Nutzen Sie ⌘+A → ⌘+C (Mac) oder Strg+A → Strg+C (Windows).",
+  "codeLabel": "Code zum Einfügen in Tampermonkey",
+  "enabled": "Prüfen Sie nach dem Speichern im Dashboard, ob das folgende Skript aktiv ist. Deaktivieren Sie ältere Canva-Übersetzungsskripts.",
+  "step5": [
+    "Öffnen Sie den geteilten Ansichtslink der Folien in Chrome. Laden Sie eine bereits offene Seite neu.",
+    "Das Fenster „Slide translator“ erscheint. Im Canva-Editor funktioniert das Werkzeug nicht."
+  ],
+  "step6": [
+    "Wählen Sie im Fenster die gewünschte Sprache, zum Beispiel English.",
+    "Klicken Sie auf „{start}“. Für Japanisch wählen Sie 日本語 und klicken auf „{original}“ (Original anzeigen).",
+    "Sobald Text erscheint, können Sie die Folien wechseln. Die Anzeige wird automatisch aktualisiert."
+  ],
+  "downloadNote": "Bei der ersten Übersetzung kann das Herunterladen der Sprachdaten dauern. Das japanische Original benötigt keinen Download.",
+  "restartNote": "Nach dem Neuladen oder Ändern der Textsprache drücken Sie erneut die Startschaltfläche.",
+  "usageTitle": "Bedienung des Fensters",
+  "usageIntro": "Die folgenden Bezeichnungen gelten bei Text in der Sprache dieser Anleitung und aktivierter Schaltflächenübersetzung. Deaktiviert erscheinen die Schaltflächen auf Japanisch.",
+  "headers": [
+    "Gewünschte Aktion",
+    "Bedienung"
+  ],
+  "rows": [
+    [
+      "Fenster verschieben",
+      "Ziehen Sie am oberen Titelbereich."
+    ],
+    [
+      "Größe ändern",
+      "Ziehen Sie an „↙“ unten links."
+    ],
+    [
+      "Erneut übersetzen",
+      "Klicken Sie auf „{retry}“. Beim japanischen Original: „{refresh}“ (Anzeige aktualisieren)."
+    ],
+    [
+      "Textsprache ändern",
+      "Wählen Sie eine andere Sprache und drücken Sie die Startschaltfläche."
+    ],
+    [
+      "Verkleinern oder erweitern",
+      "Klicken Sie auf „{collapse}“, zum Wiederherstellen auf „{expand}“."
+    ],
+    [
+      "Schaltflächensprache ändern",
+      "Schalten Sie „{translateUi}“ um. Ein: Sprache des Textes. Aus: Japanisch. Die Textsprache bleibt unverändert."
+    ],
+    [
+      "Japanisches Original lesen",
+      "Wählen Sie 日本語 und „{original}“ (Original anzeigen)."
+    ],
+    [
+      "Linke Spalte vor rechter lesen",
+      "Wählen Sie unter „{pageOrder}“ die Option „{orderColumns}“. Zurück mit „{orderRows}“."
+    ],
+    [
+      "Textgröße ändern",
+      "Unter Textgröße auf ＋ oder − klicken. Bereich: 12–32 px, Standard: 17 px. Die Einstellung wird gespeichert, wenn der Browser dies erlaubt."
+    ]
+  ],
+  "usageNotes": [
+    "Statusmeldungen erscheinen nur beim Verarbeiten, Warten auf Text oder bei Fehlern. Dauerhafte Hinweise sind ausgeblendet.",
+    "Die Schaltflächensprache gilt für alle Folien in diesem Browser. Die Lesereihenfolge wird pro Folie gespeichert; standardmäßig gilt Zeilenreihenfolge.",
+    "Wählen Sie die Reihenfolge nach Textänderungen neu. Folien desselben Designs mit ununterscheidbarem Text und Link teilen die Einstellung. Bei gesperrtem Speicher gilt sie bis zum Neuladen. Speicherhinweise erscheinen beim Zeigen auf Auswahlfeld oder Kontrollkästchen."
+  ],
+  "helpTitle": "Problemlösung",
+  "help": [
+    [
+      "Kein Übersetzungsfenster",
+      "Prüfen Sie, ob das Skript und Nutzerskripts aktiviert sind und ein Ansichtslink geöffnet ist. Laden Sie Canva neu."
+    ],
+    [
+      "Keine Hinweise sichtbar",
+      "Das ist normal. Wählen Sie eine Sprache und starten Sie."
+    ],
+    [
+      "Fehlermeldung",
+      "Lesen Sie die Meldung. Chrome oder Administratoren können die integrierte Übersetzung einschränken."
+    ],
+    [
+      "Text oder Nummern fehlen",
+      "Text in Bildern ist ausgeschlossen. Normale Listen behalten Nummern, Zeichen und verschachtelte Einrückung. Eigene Nummerierungen oder bestimmte Folienstrukturen sind eventuell nicht lesbar. Nummern werden nicht übersetzt."
+    ],
+    [
+      "Spalten werden vermischt",
+      "Stellen Sie „{pageOrder}“ auf „{orderColumns}“. Ohne klare Spaltengrenze bleibt die Zeilenreihenfolge."
+    ],
+    [
+      "Farbige Sätze klingen unnatürlich",
+      "Farben werden getrennt übersetzt, was die Formulierung beeinflussen kann. Heller Text kann einen Hintergrund erhalten."
+    ],
+    [
+      "Erneute Übersetzung bleibt gleich",
+      "Ein erneuter Durchlauf kann denselben Text ergeben."
+    ]
+  ],
+  "footer": "Stand: 2. Oktober 2026 · Code v2.8.0 enthalten. Testversion; funktioniert möglicherweise nicht mit jeder Folienstruktur oder Umgebung.",
+  "messages": {
+    "ready": "Enthaltener Code v2.8.0 / canva-reading-panel.user.js",
+    "copied": "Kopiert. Fügen Sie den Code im Tampermonkey-Editor ein.",
+    "manual": "Code markiert. Drücken Sie ⌘+C (Mac) oder Strg+C (Windows).",
+    "saved": "Download angefordert. Falls keine Datei gespeichert wird, nutzen Sie „Code kopieren“.",
+    "saveFailed": "Speichern konnte nicht gestartet werden. Nutzen Sie „Code kopieren“ oder kopieren Sie manuell."
+  }
+}

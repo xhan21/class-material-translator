@@ -1,0 +1,154 @@
+{
+  "languageLabel": "Lingua della guida / Language",
+  "guideHint": "Questa scelta cambia la lingua della guida. La lingua delle slide si sceglie in Canva.",
+  "title": "Traduttore di slide Canva: guida all’installazione",
+  "author": "Han",
+  "course": "Guida al traduttore Canva in fase di prova per i corsi di {author} all’Università iU. Attualmente supporta solo i link di visualizzazione Canva.",
+  "intro": "Leggi le slide giapponesi in un pannello separato, nella lingua scelta. Si aggiorna al cambio di slide. È disponibile anche l’originale giapponese. Numeri e colori sono mantenuti quando rilevabili.",
+  "tags": [
+    "Chrome per computer",
+    "Usa Tampermonkey",
+    "Codice incluso v2.8.0 · Versione di prova"
+  ],
+  "nav": [
+    "Installazione",
+    "Copia codice",
+    "Utilizzo",
+    "Risoluzione dei problemi"
+  ],
+  "navLabel": "Navigazione della guida",
+  "update": "Già installato? Vai al passaggio 04, sostituisci tutto il codice dello script esistente, salva e ricarica Canva.",
+  "stepTitles": [
+    "Prepara Chrome sul computer",
+    "Installa Tampermonkey",
+    "Consenti gli script utente",
+    "Installa o aggiorna il codice",
+    "Apri un link di visualizzazione Canva",
+    "Scegli una lingua e avvia"
+  ],
+  "step1": [
+    "Usa Google Chrome 138 o successivo su un computer. Di solito basta aggiornare all’ultima versione.",
+    "La traduzione non supporta gli smartphone. Anche le impostazioni del dispositivo o dell’amministratore possono limitarla."
+  ],
+  "chromeReference": "Documentazione ufficiale di Chrome ↗",
+  "step2": "Nel Chrome Web Store, scegli «Aggiungi» e poi «Aggiungi estensione». Se è già installato, prosegui.",
+  "install": "Apri Tampermonkey ↗",
+  "step3": [
+    "Inserisci l’indirizzo qui sopra nella barra degli indirizzi di Chrome.",
+    "Apri «Dettagli» di Tampermonkey.",
+    "Attiva «Consenti script utente»."
+  ],
+  "tampermonkeyReference": "Istruzioni ufficiali di Tampermonkey ↗",
+  "step4Intro": "Per aggiornare, apri lo script esistente e sostituisci tutto il suo codice senza crearne un altro.",
+  "step4": [
+    "Premi «Copia codice» qui sotto.",
+    "Apri Tampermonkey dalle estensioni di Chrome in alto a destra e scegli «Crea un nuovo script».",
+    "Seleziona ed elimina tutto il codice iniziale nell’editor.",
+    "Incolla il codice e salva con ⌘+S (Mac) o Ctrl+S (Windows)."
+  ],
+  "copy": "Copia codice",
+  "download": "Salva codice",
+  "showCode": "Mostra codice / copia manualmente",
+  "manualCopy": "Fai clic nel codice. Usa ⌘+A → ⌘+C (Mac) o Ctrl+A → Ctrl+C (Windows).",
+  "codeLabel": "Codice da incollare in Tampermonkey",
+  "enabled": "Dopo il salvataggio, verifica nella dashboard che lo script seguente sia attivo. Disattiva i vecchi script di traduzione Canva.",
+  "step5": [
+    "Apri in Chrome il link condiviso per visualizzare le slide. Se è già aperto, ricarica la pagina.",
+    "Appare il pannello «Slide translator». Lo strumento non funziona nell’editor di Canva."
+  ],
+  "step6": [
+    "Nel pannello scegli la lingua desiderata, ad esempio English.",
+    "Premi «{start}». Per il giapponese scegli 日本語 e premi «{original}» (mostra originale).",
+    "Quando appare il testo, passa da una slide all’altra. Il pannello si aggiorna automaticamente."
+  ],
+  "downloadNote": "La prima traduzione può richiedere tempo per scaricare i dati della lingua. L’originale giapponese non richiede questo download.",
+  "restartNote": "Dopo aver ricaricato o cambiato la lingua del testo, premi di nuovo il pulsante di avvio.",
+  "usageTitle": "Uso del pannello",
+  "usageIntro": "I nomi seguenti corrispondono alla lingua di questa guida, con la traduzione dei pulsanti attiva. Disattivandola, i pulsanti sono in giapponese.",
+  "headers": [
+    "Cosa vuoi fare",
+    "Operazione"
+  ],
+  "rows": [
+    [
+      "Spostare il pannello",
+      "Trascina l’area del titolo in alto."
+    ],
+    [
+      "Cambiare dimensione",
+      "Trascina «↙» nell’angolo in basso a sinistra."
+    ],
+    [
+      "Tradurre di nuovo",
+      "Premi «{retry}». Per l’originale giapponese usa «{refresh}» (aggiorna visualizzazione)."
+    ],
+    [
+      "Cambiare lingua del testo",
+      "Scegli un’altra lingua e premi il pulsante di avvio."
+    ],
+    [
+      "Ridurre o espandere",
+      "Premi «{collapse}», poi «{expand}» per ripristinare."
+    ],
+    [
+      "Cambiare lingua dei pulsanti",
+      "Attiva o disattiva «{translateUi}». Attivo: lingua del testo. Disattivo: giapponese. La lingua del testo non cambia."
+    ],
+    [
+      "Leggere l’originale giapponese",
+      "Scegli 日本語 e premi «{original}» (mostra originale)."
+    ],
+    [
+      "Leggere prima la colonna sinistra",
+      "In «{pageOrder}», scegli «{orderColumns}». Torna indietro con «{orderRows}»."
+    ],
+    [
+      "Modificare la dimensione del testo",
+      "Premi ＋ o − in Dimensione testo. Intervallo: 12–32 px; valore iniziale: 17 px. La scelta viene salvata se il browser consente la memorizzazione."
+    ]
+  ],
+  "usageNotes": [
+    "Lo stato appare solo durante elaborazione, attesa del testo o errori. I suggerimenti fissi sono nascosti.",
+    "La lingua dei pulsanti vale per tutte le slide in questo browser. L’ordine di lettura viene salvato per slide; quello predefinito è per righe.",
+    "Dopo aver modificato il testo, scegli nuovamente l’ordine. Pagine dello stesso progetto indistinguibili per testo e link condividono l’impostazione. Se la memorizzazione è limitata, dura fino al ricaricamento. Passa il mouse sul selettore o sulla casella per i dettagli."
+  ],
+  "helpTitle": "Risoluzione dei problemi",
+  "help": [
+    [
+      "Il pannello non appare",
+      "Verifica che lo script e gli script utente siano abilitati e che il link sia di visualizzazione, poi ricarica Canva."
+    ],
+    [
+      "Non ci sono istruzioni",
+      "È normale. Scegli una lingua e premi il pulsante di avvio."
+    ],
+    [
+      "Appare un errore",
+      "Leggi il messaggio. Chrome o l’amministratore possono limitare la traduzione integrata."
+    ],
+    [
+      "Mancano testo o numeri",
+      "Il testo nelle immagini è escluso. Gli elenchi normali mantengono numeri, simboli e rientri annidati; numerazioni personalizzate o certe strutture potrebbero non essere leggibili. I numeri non vengono tradotti."
+    ],
+    [
+      "Le colonne si mescolano",
+      "Imposta «{pageOrder}» su «{orderColumns}». Senza un confine chiaro resta l’ordine per righe."
+    ],
+    [
+      "Frasi colorate poco naturali",
+      "I colori diversi sono tradotti separatamente e possono influire sulla formulazione. Si può aggiungere uno sfondo ai testi chiari."
+    ],
+    [
+      "La nuova traduzione è identica",
+      "Ripetere la traduzione può produrre lo stesso risultato."
+    ]
+  ],
+  "footer": "Aggiornato il 2 ottobre 2026 · Codice incluso v2.8.0. Versione di prova: potrebbe non funzionare con alcune slide o configurazioni.",
+  "messages": {
+    "ready": "Codice incluso v2.8.0 / canva-reading-panel.user.js",
+    "copied": "Copiato. Incolla nell’editor di Tampermonkey.",
+    "manual": "Codice selezionato. Premi ⌘+C (Mac) o Ctrl+C (Windows).",
+    "saved": "Download richiesto. Se il file non viene salvato, usa «Copia codice».",
+    "saveFailed": "Impossibile avviare il salvataggio. Usa «Copia codice» o copia manualmente."
+  }
+}

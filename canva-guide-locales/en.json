@@ -1,0 +1,154 @@
+{
+  "languageLabel": "Guide language / Language",
+  "guideHint": "This changes the guide language. Choose the slide translation language in Canva.",
+  "title": "Canva Slide Translator — Setup Guide",
+  "author": "Han",
+  "course": "A setup guide for the Canva slide translator being trialled in classes taught by {author} at iU University. Currently supports Canva viewing links only.",
+  "intro": "Read Japanese slides in a separate panel in your chosen language. The panel updates when you change slides. You can also view the Japanese original. Numbers and text colors are preserved where available.",
+  "tags": [
+    "Desktop Chrome",
+    "Uses Tampermonkey",
+    "Included code v2.8.0 · Trial"
+  ],
+  "nav": [
+    "Setup",
+    "Copy code",
+    "How to use",
+    "Troubleshooting"
+  ],
+  "navLabel": "Guide navigation",
+  "update": "Already installed? Go to step 04, replace all the existing script code, save, and reload Canva.",
+  "stepTitles": [
+    "Prepare desktop Chrome",
+    "Install Tampermonkey",
+    "Allow userscripts",
+    "Install or update the code",
+    "Open a Canva viewing link",
+    "Choose a language and start"
+  ],
+  "step1": [
+    "Use Google Chrome 138 or later on a computer. Updating to the latest version is usually sufficient.",
+    "The translation feature does not support smartphones. Device or administrator settings may also restrict access."
+  ],
+  "chromeReference": "Official Chrome documentation ↗",
+  "step2": "In the Chrome Web Store, select “Add to Chrome”, then “Add extension”. If already installed, continue to the next step.",
+  "install": "Open Tampermonkey ↗",
+  "step3": [
+    "Enter the address above in Chrome’s address bar.",
+    "Open “Details” for Tampermonkey.",
+    "Turn on “Allow user scripts”."
+  ],
+  "tampermonkeyReference": "Official Tampermonkey instructions ↗",
+  "step4Intro": "To update, open your existing script and replace all its code instead of creating another script.",
+  "step4": [
+    "Click “Copy code” below.",
+    "Open Tampermonkey from Chrome’s extensions menu at the top right, then select “Create a new script”.",
+    "Select and delete all the default code in the editor.",
+    "Paste the code and save with ⌘+S (Mac) or Ctrl+S (Windows)."
+  ],
+  "copy": "Copy code",
+  "download": "Save code",
+  "showCode": "Show code / copy manually",
+  "manualCopy": "Click the code field. Use ⌘+A then ⌘+C (Mac), or Ctrl+A then Ctrl+C (Windows).",
+  "codeLabel": "Code to paste into Tampermonkey",
+  "enabled": "After saving, check that the script below is enabled in the dashboard. Disable any older Canva translation scripts.",
+  "step5": [
+    "Open the shared viewing link for your slides in Chrome. Reload if it is already open.",
+    "A “Slide translator” panel appears. The tool does not run in Canva’s editor."
+  ],
+  "step6": [
+    "Choose the language you want to read, such as English, in the panel.",
+    "Click “{start}”. For Japanese, choose 日本語 and click “{original}” (show original).",
+    "Once text appears, browse by changing slides. The panel updates automatically."
+  ],
+  "downloadNote": "The first translation may take time to download language data. Viewing the Japanese original needs no language download.",
+  "restartNote": "After reloading or changing the text language, click the start button again.",
+  "usageTitle": "Using the panel",
+  "usageIntro": "Button names below assume the slide language matches this guide and button translation is on. Turning it off shows buttons in Japanese.",
+  "headers": [
+    "What you want to do",
+    "Action"
+  ],
+  "rows": [
+    [
+      "Move the panel",
+      "Drag near the title at the top."
+    ],
+    [
+      "Resize",
+      "Drag the “↙” corner at the bottom left."
+    ],
+    [
+      "Translate again",
+      "Click “{retry}”. For the Japanese original, use “{refresh}” (refresh display)."
+    ],
+    [
+      "Change the text language",
+      "Select another language and click the start button."
+    ],
+    [
+      "Minimize or expand",
+      "Click “{collapse}”; restore with “{expand}”."
+    ],
+    [
+      "Change button language",
+      "Toggle “{translateUi}”. On: same language as the text. Off: Japanese. The text language stays the same."
+    ],
+    [
+      "Read the Japanese original",
+      "Choose 日本語 and click “{original}” (show original)."
+    ],
+    [
+      "Read left column, then right",
+      "Under “{pageOrder}”, select “{orderColumns}”. Choose “{orderRows}” to revert."
+    ],
+    [
+      "Change text size",
+      "Use ＋ or − under Text size. The range is 12–32 px; the default is 17 px. Your choice is saved when browser storage is available."
+    ]
+  ],
+  "usageNotes": [
+    "Routine hints are hidden. Status appears only during processing, while waiting for text, or on errors.",
+    "Button language is shared across slides in this browser. Reading order is saved per slide; unset slides use row order.",
+    "Reselect reading order after editing slide text. Slides in the same design with indistinguishable text and links share a setting. If storage is restricted, settings last until reload. Hover over the selector or checkbox for storage details."
+  ],
+  "helpTitle": "Troubleshooting",
+  "help": [
+    [
+      "No translation panel",
+      "Check the script and “Allow user scripts” are enabled, confirm you opened a viewing link, then reload Canva."
+    ],
+    [
+      "No instructions appear",
+      "This is normal. Choose a language and click the start button."
+    ],
+    [
+      "An error appears",
+      "Read the displayed error. Chrome or administrator settings may restrict built-in translation."
+    ],
+    [
+      "Missing text or numbers",
+      "Text inside images is excluded. Standard lists retain numbers, symbols and nested indentation, but custom numbering or slide structures may not be readable. Numbers are not translated."
+    ],
+    [
+      "Columns are interleaved",
+      "Set “{pageOrder}” to “{orderColumns}”. Row order remains if no clear column boundary can be found."
+    ],
+    [
+      "Colored sentences sound awkward",
+      "Different colors are translated separately, which can affect phrasing. A background may be added behind light text."
+    ],
+    [
+      "Retry gives the same text",
+      "Running translation again may produce the same result."
+    ]
+  ],
+  "footer": "Updated 2 October 2026 · Included code v2.8.0. This trial may not work with every slide structure or environment.",
+  "messages": {
+    "ready": "Included code v2.8.0 / canva-reading-panel.user.js",
+    "copied": "Copied. Paste into the Tampermonkey editor.",
+    "manual": "Code selected. Press ⌘+C (Mac) or Ctrl+C (Windows) to copy.",
+    "saved": "File download requested. If no file is saved, use “Copy code”.",
+    "saveFailed": "Could not start saving. Use “Copy code” or copy manually from the code field."
+  }
+}
