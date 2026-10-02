@@ -1,6 +1,6 @@
 # 授業資料 翻訳ツール
 
-[HAN](https://xuhan.jp/)が担当する授業向けに試運用している、Canva資料とClassroomで配布されたPDFの翻訳ツールです。
+[HAN](https://www.i-u.ac.jp/academics/faculty/hanxu/)が担当する授業向けに試運用している、Canva資料とClassroomで配布されたPDFの翻訳ツールです。
 
 授業資料を開いたまま、右側のパネルに訳文を表示します。パソコン版ChromeとTampermonkeyで利用します。
 
