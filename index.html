@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Canva資料とGoogle Classroomで配布されたPDFの翻訳ツール導入ガイド。共通の準備と、それぞれのコード・使い方を案内します。">
+<meta name="description" content="授業資料を母国語で読みたい方や、教室前方の英訳が見えにくい方のための翻訳ツール導入ガイド。Canva・Classroom PDFに共通する使い方と、資料に合うコードを案内します。">
 <title>授業資料 翻訳ツール導入ガイド｜Canva・Classroom PDF</title>
 <style>
 
@@ -100,7 +100,6 @@ section, .branch{scroll-margin-top:24px}.languages{font-size:14px;color:var(--mu
 .tool-card{margin-top:22px;padding:22px;border:1px solid #b9cdeb;border-radius:12px;background:#f9fbfe;scroll-margin-top:24px}
 .tool-card h3{margin-top:0}.tool-card .tool-version{color:var(--muted);font-size:13px;font-weight:400}
 .tool-card .script-name{font-size:14px}.tool-card textarea{background:#102231}.tool-card .actions{margin-top:14px}
-.tool-links{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0}.tool-links a{font-size:14px;font-weight:600}
 .panel-example{margin:24px 0 0;scroll-margin-top:24px}.panel-example figcaption{margin-bottom:12px}.panel-example strong{display:block;margin-bottom:6px}.panel-example p{margin:0}.panel-example-image{display:block;border:1px solid var(--line);border-radius:10px;overflow:hidden}.panel-example img{display:block;width:100%;height:auto}
 @media(max-width:700px){.start-paths{grid-template-columns:1fr}.start-path{gap:4px}}
 </style>
@@ -109,10 +108,11 @@ section, .branch{scroll-margin-top:24px}.languages{font-size:14px;color:var(--mu
 <header class="hero"><div class="wrap">
 <p class="eyebrow">授業資料を、自分の読みやすい言語で</p>
 <h1>授業資料 翻訳ツール<br>導入ガイド</h1>
-<p class="course-context">韓が担当する授業向けに試運用している翻訳ツールの導入ガイドです。<strong>Canvaの閲覧用資料</strong>と、<strong>Google Classroomで配布されたPDF</strong>に対応しています。</p>
-<p class="intro">日本語や英語などの資料を開いたまま、右側のパネルに訳文を表示します。ページを変えると訳文も更新されます。PDFを保存したり、別のサービスへアップロードしたりする操作は不要です。</p>
+<p class="course-context">授業中は基本的に、担当教員が<strong>日本語の資料を英語に翻訳</strong>し、教室前方の画面に表示します。</p>
+<p class="course-context"><strong>母国語で読みたい方</strong>や、<strong>前方の英訳が見えにくい方</strong>は、このガイドに沿ってご自身のパソコンに翻訳ツールを導入してください。導入は必要な方だけで大丈夫です。</p>
+<p class="intro">Canvaの閲覧用資料と、Google Classroomで配布されたPDFに対応する試用版です。資料を開いたまま、右側のパネルで訳文を確認できます。</p>
 <div class="tags"><span class="tag">パソコン版Chrome用</span><span class="tag">19言語</span><span class="tag">Tampermonkeyを使用・試用版</span></div>
-<nav aria-label="ガイド内の移動"><a href="#start">どこから始める？</a><a href="#canva-code">Canva版のコード</a><a href="#pdf-code">PDF版のコード</a><a href="#step5">資料別の使い方</a><a href="#help">うまく動かないとき</a></nav>
+<nav aria-label="ガイド内の移動"><a href="#start">どこから始める？</a><a href="#canva-code">Canva版のコード</a><a href="#pdf-code">PDF版のコード</a><a href="#step5">共通の使い方</a><a href="#help">うまく動かないとき</a></nav>
 </div></header>
 
 <main class="wrap">
@@ -174,7 +174,7 @@ section, .branch{scroll-margin-top:24px}.languages{font-size:14px;color:var(--mu
 <h3 id="canva-code-title">Canva資料用 <span class="tool-version">v2.9.0</span></h3>
 <p>Canvaの<strong>閲覧用リンク</strong>で開くスライドに使います。Canvaの編集画面には対応していません。</p>
 <p class="script-name">登録する名前：<strong>Canva 閲覧用テキストパネル（試用版）</strong></p>
-<div class="actions"><button class="button" id="copy-canva-code" type="button">Canva版のコードをコピー</button><a class="button secondary" href="#canva-use">Canvaでの使い方</a></div>
+<div class="actions"><button class="button" id="copy-canva-code" type="button">Canva版のコードをコピー</button><a class="button secondary" href="#step5">使い方を見る</a></div>
 <p class="status" id="copy-canva-status" role="status">Canva版 v2.9.0</p>
 <details class="source-code" id="source-canva-details"><summary>Canva版のコードを表示・手動でコピーする</summary>
 <p class="small">コード欄をクリックし、⌘＋A → ⌘＋C（Mac）、またはCtrl＋A → Ctrl＋C（Windows）でコピーできます。</p>
@@ -2060,7 +2060,7 @@ SOFTWARE.
 <h3 id="pdf-code-title">Classroomで配布されたPDF用 <span class="tool-version">v0.4.2</span></h3>
 <p><strong>Classroom内のPDFプレビュー</strong>や、<strong>Google DriveのPDF閲覧画面</strong>で使います。PDFのダウンロードは不要です。</p>
 <p class="script-name">登録する名前：<strong>Classroom PDF 翻訳パネル（試用版）</strong></p>
-<div class="actions"><button class="button" id="copy-pdf-code" type="button">PDF版のコードをコピー</button><a class="button secondary" href="#pdf-use">PDFでの使い方</a></div>
+<div class="actions"><button class="button" id="copy-pdf-code" type="button">PDF版のコードをコピー</button><a class="button secondary" href="#step5">使い方を見る</a></div>
 <p class="status" id="copy-pdf-status" role="status">PDF版 v0.4.2</p>
 <details class="source-code" id="source-pdf-details"><summary>PDF版のコードを表示・手動でコピーする</summary>
 <p class="small">コード欄をクリックし、⌘＋A → ⌘＋C（Mac）、またはCtrl＋A → Ctrl＋C（Windows）でコピーできます。</p>
@@ -4398,31 +4398,27 @@ SOFTWARE.
 </div></section>
 
 <section class="step" id="step5" aria-labelledby="title5"><div class="number" aria-hidden="true">05</div><div>
-<h2 id="title5">資料の種類に合わせて翻訳を始める</h2>
-<div class="tool-links"><a href="#canva-use">Canva資料の場合 →</a><a href="#pdf-use">ClassroomのPDFの場合 →</a></div>
-<article class="tool-card" id="canva-use" aria-labelledby="canva-use-title"><h3 id="canva-use-title">Canva資料の場合</h3>
+<span id="canva-use"></span><span id="pdf-use"></span>
+<h2 id="title5">資料を開いて翻訳する</h2>
+<p>Canva版・PDF版ともに、使い方は共通です。</p>
 <ol>
-<li>授業で共有された<strong>Canvaの閲覧用リンク</strong>をChromeで開きます。編集用リンクでは動作しません。</li>
-<li>右側に表示される「<strong>Slide translator</strong>」パネルで、「<strong>翻訳元（Translate from）</strong>」に資料の言語、「<strong>翻訳先（Translate to）</strong>」に読みたい言語を選びます。</li>
+<li>授業で共有された資料を<strong>Chromeで開きます</strong>。Canvaは閲覧用リンク、PDFはClassroom内またはGoogle Driveの閲覧画面で開いてください。</li>
+<li>右側の翻訳パネルで、「<strong>翻訳元（Translate from）</strong>」を「<strong>日本語</strong>」にし、「<strong>翻訳先（Translate to）</strong>」で母国語など、読みたい言語を選びます。</li>
 <li>「<strong>Start translation（翻訳を開始）</strong>」を押します。</li>
-<li>スライドを切り替えると、訳文も自動で更新されます。</li>
+<li>資料のページを変えると、訳文も自動で更新されます。</li>
 </ol>
-<p class="small">Canvaの資料がClassroomでリンクとして配布されている場合も、開いた先がCanvaならこちらの手順です。</p>
-</article>
-<article class="tool-card" id="pdf-use" aria-labelledby="pdf-use-title"><h3 id="pdf-use-title">Classroomで配布されたPDFの場合</h3>
-<ol>
-<li>授業で配布された<strong>PDFをClassroom内で開きます</strong>。Google DriveのPDF閲覧画面でも利用できます。</li>
-<li>右側に表示される「<strong>PDF translator</strong>」パネルで、「<strong>翻訳元（Translate from）</strong>」に資料の言語、「<strong>翻訳先（Translate to）</strong>」に読みたい言語を選びます。</li>
-<li>「<strong>Start translation（翻訳を開始）</strong>」を押します。</li>
-<li>PDFのページを変えると、訳文も自動で更新されます。PDFを保存・アップロードする操作は不要です。</li>
-</ol>
-<p class="small">画像だけで構成されたPDFには対応していません。</p>
-<figure class="panel-example" id="pdf-panel-example">
-<figcaption><strong>翻訳パネルの表示例</strong><p class="small">翻訳元を「日本語」、翻訳先を「English」にして、PDFを英語に翻訳している例です。元の資料を開いたまま、右側のパネルに本文の訳文が表示されていれば、翻訳できています。</p></figcaption>
-<a class="panel-example-image" href="guide-assets/pdf-translation-panel-example.png?v=60b4f742e2d2" target="_blank" rel="noopener noreferrer" aria-label="翻訳パネルの表示例を大きく見る（新しいタブ）"><img src="guide-assets/pdf-translation-panel-example.png?v=60b4f742e2d2" width="1577" height="756" loading="lazy" alt="左側に日本語の授業PDF、右側のPDF translatorパネルに英語の訳文が表示されている例"></a>
+<p class="small">資料を保存したり、別のサービスへアップロードしたりする操作は不要です。文字を大きくしたい場合は、パネルの「Text size（文字サイズ）」の「＋」を押してください。</p>
+<h3>翻訳パネルの表示例</h3>
+<p class="small">日本語の資料を英語に翻訳している例です。資料の右側に訳文が表示されていれば、翻訳できています。</p>
+<figure class="panel-example" id="canva-panel-example">
+<figcaption><strong>Canva資料の表示例</strong><p class="small">画像は以前の版の表示例です。現在の版では「翻訳元」と「文字サイズ」も選べます。</p></figcaption>
+<a class="panel-example-image" href="guide-assets/canva-translation-panel-example.png?v=05b4cd36d76d" target="_blank" rel="noopener noreferrer" aria-label="Canva資料の翻訳パネルの表示例を大きく見る（新しいタブ）"><img src="guide-assets/canva-translation-panel-example.png?v=05b4cd36d76d" width="3018" height="1702" loading="lazy" alt="左側に日本語のCanvaスライド、右側のSlide translatorパネルに英語の訳文が表示されている例"></a>
 </figure>
-</article>
-<h3>どちらのツールも共通</h3>
+<figure class="panel-example" id="pdf-panel-example">
+<figcaption><strong>PDF資料の表示例</strong></figcaption>
+<a class="panel-example-image" href="guide-assets/pdf-translation-panel-example.png?v=60b4f742e2d2" target="_blank" rel="noopener noreferrer" aria-label="PDF資料の翻訳パネルの表示例を大きく見る（新しいタブ）"><img src="guide-assets/pdf-translation-panel-example.png?v=60b4f742e2d2" width="1577" height="756" loading="lazy" alt="左側に日本語の授業PDF、右側のPDF translatorパネルに英語の訳文が表示されている例"></a>
+</figure>
+<h3>言語の選び方</h3>
 <p><strong>英語の資料を日本語で読む場合：</strong>「翻訳元：English」「翻訳先：日本語」にして、「<strong>翻訳開始</strong>」を押します。翻訳元は自動判定ではないため、資料の言語に合わせて選んでください。</p>
 <p>初期設定は「翻訳元：日本語」「翻訳先：English」です。翻訳元と翻訳先を同じ言語にすると、「<strong>原文を表示（Show original）</strong>」で原文のまま表示できます。ボタンの翻訳がオンの場合、ボタン名は翻訳先の言語に合わせて変わります。</p>
 <p class="small">初回はChromeが翻訳用の言語データを取得するため、少し時間がかかる場合があります。再読み込み後は初期設定に戻るため、翻訳元・翻訳先を確認してください。再読み込み後や言語変更後は、開始ボタンをもう一度押します。翻訳にはChromeの内蔵機能を使用します。</p>
@@ -4430,10 +4426,10 @@ SOFTWARE.
 </div></section>
 
 <section class="panel" id="usage" aria-labelledby="usage-title"><h2 id="usage-title">利用中の操作</h2>
-<p class="small">下のボタン名は英語表示の例です。ボタンの翻訳をオンにすると、選択した言語で表示されます。</p>
+<p class="small">操作はCanva版・PDF版で共通です。下のボタン名は英語表示の例です。ボタンの翻訳をオンにすると、選択した言語で表示されます。</p>
 <div class="table-wrap"><table><thead><tr><th scope="col">やりたいこと</th><th scope="col">操作</th></tr></thead><tbody>
-<tr><td>パネルを移動する</td><td>上部のタイトル付近をドラッグします。Canva版・PDF版ともに、起動時は右側に表示されます。</td></tr>
-<tr><td>大きさを変える</td><td>Canva版・PDF版ともに、左下の「↙」をドラッグします。</td></tr>
+<tr><td>パネルを移動する</td><td>上部のタイトル付近をドラッグします。起動時は右側に表示されます。</td></tr>
+<tr><td>大きさを変える</td><td>左下の「↙」をドラッグします。</td></tr>
 <tr><td>文字を大きく・小さくする</td><td>「Text size（文字サイズ）」の「＋」で大きく、「−」で小さくします。本文と番号の大きさを12〜32 pxの範囲で調整できます。初期値は17 pxです。通常、選んだ大きさは同じブラウザー・同じサイトで次回も引き継がれます。</td></tr>
 <tr><td>もう一度翻訳する</td><td>「Translate again」を押します。翻訳元と翻訳先が同じ場合は「Refresh display（表示を更新）」です。</td></tr>
 <tr><td>資料の言語・翻訳先を変える</td><td>「Translate from（翻訳元）」で資料の言語、「Translate to（翻訳先）」で読みたい言語を選び、開始ボタンを押します。</td></tr>
