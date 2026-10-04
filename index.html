@@ -2057,17 +2057,17 @@ SOFTWARE.
 </article>
 
 <article class="tool-card" id="pdf-code" aria-labelledby="pdf-code-title">
-<h3 id="pdf-code-title">Classroomで配布されたPDF用 <span class="tool-version">v0.4.1</span></h3>
+<h3 id="pdf-code-title">Classroomで配布されたPDF用 <span class="tool-version">v0.4.2</span></h3>
 <p><strong>Classroom内のPDFプレビュー</strong>や、<strong>Google DriveのPDF閲覧画面</strong>で使います。PDFのダウンロードは不要です。</p>
 <p class="script-name">登録する名前：<strong>Classroom PDF 翻訳パネル（試用版）</strong></p>
 <div class="actions"><button class="button" id="copy-pdf-code" type="button">PDF版のコードをコピー</button><a class="button secondary" href="#pdf-use">PDFでの使い方</a></div>
-<p class="status" id="copy-pdf-status" role="status">PDF版 v0.4.1</p>
+<p class="status" id="copy-pdf-status" role="status">PDF版 v0.4.2</p>
 <details class="source-code" id="source-pdf-details"><summary>PDF版のコードを表示・手動でコピーする</summary>
 <p class="small">コード欄をクリックし、⌘＋A → ⌘＋C（Mac）、またはCtrl＋A → Ctrl＋C（Windows）でコピーできます。</p>
 <textarea id="source-pdf-code" translate="no" class="notranslate" readonly spellcheck="false" wrap="off" dir="ltr" aria-label="Tampermonkeyに登録するPDF版のコード">// ==UserScript==
 // @name         Classroom PDF 翻訳パネル（試用版）
 // @namespace    local.classroom-pdf-translation
-// @version      0.4.1
+// @version      0.4.2
 // @description  Classroom・Google Driveで開いたPDFを、保存せず横のパネルで翻訳します。
 // @match        https://classroom.google.com/*
 // @match        https://drive.google.com/viewer/main*
@@ -3461,7 +3461,7 @@ SOFTWARE.
     if (!pdfImageCache || pdfImageCache.image !== image || pdfImageCache.src !== src ||
         pdfImageCache.naturalWidth !== image.naturalWidth || pdfImageCache.naturalHeight !== image.naturalHeight) {
       const cache = { image, src, naturalWidth: image.naturalWidth, naturalHeight: image.naturalHeight,
-        pixels: null, colors: new Map() };
+        pixels: null, colors: new Map(), gaps: new Map() };
       pdfImageCache = cache;
       try {
         const scale = Math.min(1, 2400 / Math.max(image.naturalWidth, image.naturalHeight));
@@ -3478,13 +3478,14 @@ SOFTWARE.
     const cache = pdfImageCache, bounds = image.getBoundingClientRect();
     const width = bounds.right - bounds.left, height = bounds.bottom - bounds.top;
     if (!cache.pixels || width &lt;= 0 || height &lt;= 0) return () =&gt; PDF_DEFAULT_COLOR;
-    return rect =&gt; {
-      const target = {
+    const imageRect = rect =&gt; ({
         left: (rect.left - bounds.left) / width * cache.pixels.width,
         right: (rect.right - bounds.left) / width * cache.pixels.width,
         top: (rect.top - bounds.top) / height * cache.pixels.height,
         bottom: (rect.bottom - bounds.top) / height * cache.pixels.height
-      };
+      });
+    const readColor = rect =&gt; {
+      const target = imageRect(rect);
       const key = [target.left, target.top, target.right, target.bottom].map(Math.round).join(&#x27;,&#x27;);
       if (!cache.colors.has(key)) {
         if (cache.colors.size &gt;= 1000) cache.colors.clear();
@@ -3492,6 +3493,92 @@ SOFTWARE.
       }
       return cache.colors.get(key);
     };
+    readColor.gaps = rect =&gt; {
+      const target = imageRect(rect);
+      const key = [target.left, target.top, target.right, target.bottom].map(Math.round).join(&#x27;,&#x27;);
+      if (!cache.gaps.has(key)) {
+        if (cache.gaps.size &gt;= 1000) cache.gaps.clear();
+        cache.gaps.set(key, pdfLineGaps(cache.pixels, target));
+      }
+      return cache.gaps.get(key).map(gap =&gt; Object.fromEntries(Object.entries(gap)
+        .map(([k, x]) =&gt; [k, bounds.left + x / cache.pixels.width * width])));
+    };
+    return readColor;
+  }
+
+  // Drive sometimes joins separate columns into one paragraph. Its DOM Range
+  // rectangles describe the invisible selection font, not the PDF glyphs.
+  // Use large blank strips in the already-rendered image to locate a real gap.
+  function pdfLineGaps(pixels, rect) {
+    const { width, height, data } = pixels;
+    const left = Math.max(0, Math.floor(rect.left)), right = Math.min(width, Math.ceil(rect.right));
+    const top = Math.max(0, Math.floor(rect.top)), bottom = Math.min(height, Math.ceil(rect.bottom));
+    if (right &lt;= left || bottom &lt;= top || (right - left) * (bottom - top) &gt; 300000) return [];
+    const colors = new Map();
+    for (let y = top; y &lt; bottom; y++) for (let x = left; x &lt; right; x++) {
+      const i = (y * width + x) * 4;
+      if (data[i + 3] &lt; 240) continue;
+      const key = ((data[i] &gt;&gt; 3) &lt;&lt; 10) | ((data[i + 1] &gt;&gt; 3) &lt;&lt; 5) | (data[i + 2] &gt;&gt; 3);
+      colors.set(key, (colors.get(key) || 0) + 1);
+    }
+    const background = [...colors].sort((a, b) =&gt; b[1] - a[1])[0];
+    if (!background || background[1] &lt; (right - left) * (bottom - top) * .6) return [];
+    const bg = [((background[0] &gt;&gt; 10) &amp; 31) * 8 + 4, ((background[0] &gt;&gt; 5) &amp; 31) * 8 + 4, (background[0] &amp; 31) * 8 + 4];
+    const ink = [];
+    for (let x = left; x &lt; right; x++) {
+      let count = 0;
+      for (let y = top; y &lt; bottom; y++) {
+        const i = (y * width + x) * 4;
+        if (data[i + 3] &gt;= 240 &amp;&amp; bg.reduce((sum, c, k) =&gt; sum + (data[i + k] - c) ** 2, 0) &gt; 1800) count++;
+      }
+      if (count &gt;= Math.max(2, (bottom - top) * .08)) ink.push(x);
+    }
+    const gaps = [];
+    for (let i = 1; i &lt; ink.length; i++) {
+      if (ink[i] - ink[i - 1] &gt;= Math.max(8, (bottom - top) * 1.5)) {
+        gaps.push({ left: ink[i - 1] + 1, right: ink[i], start: ink[0], end: ink[ink.length - 1] + 1 });
+      }
+    }
+    return gaps;
+  }
+
+  function splitPdfParagraph(record, records, readColor, level = 0) {
+    const { text, rect } = record;
+    if (!readColor.gaps || level &gt;= 3 || !/\S[ \t\u00a0]+\S/u.test(text)) return [record];
+    const height = rect.bottom - rect.top;
+    const peers = records.filter(p =&gt; p !== record &amp;&amp;
+      p.rect.bottom - p.rect.top &gt;= height * .6 &amp;&amp; p.rect.bottom - p.rect.top &lt;= height * 1.5);
+    const weight = value =&gt; [...value].reduce((sum, ch) =&gt; sum +
+      (/\s/u.test(ch) ? .3 : /[\u0020-\u007e]/u.test(ch) ? .55 : 1), 0);
+    for (const gap of readColor.gaps(rect)) {
+      // A blank within a sentence is insufficient: require at least two other
+      // paragraphs on each side of a shared, vertically overlapping gutter.
+      const edges = [...new Set([gap.left, gap.right, ...peers.flatMap(p =&gt; [p.rect.left, p.rect.right])])]
+        .filter(x =&gt; x &gt;= gap.left &amp;&amp; x &lt;= gap.right).sort((a, b) =&gt; a - b);
+      const supported = edges.slice(1).some((edge, i) =&gt; {
+        const cut = (edges[i] + edge) / 2;
+        const left = peers.filter(p =&gt; p.rect.right &lt;= cut), right = peers.filter(p =&gt; p.rect.left &gt;= cut);
+        return left.length &gt;= 2 &amp;&amp; right.length &gt;= 2 &amp;&amp; left.some(a =&gt; right.some(b =&gt;
+          Math.min(a.rect.bottom, b.rect.bottom) - Math.max(a.rect.top, b.rect.top) &gt;= height * .3));
+      });
+      if (!supported) continue;
+      const leftWidth = gap.left - gap.start, rightWidth = gap.end - gap.right;
+      if (Math.min(leftWidth, rightWidth) &lt; height) continue;
+      const ratio = leftWidth / (leftWidth + rightWidth);
+      const candidates = [...text.matchAll(/[ \t\u00a0]+/gu)].map(match =&gt; {
+        const left = text.slice(0, match.index).trim(), right = text.slice(match.index + match[0].length).trim();
+        const a = weight(left), b = weight(right);
+        return { left, right, error: Math.abs(a / (a + b) - ratio) };
+      }).filter(c =&gt; c.left &amp;&amp; c.right).sort((a, b) =&gt; a.error - b.error);
+      const best = candidates[0];
+      // Keep ambiguous text intact. Never invent words or split within a word.
+      if (!best || best.error &gt; .1 || (candidates[1] &amp;&amp; candidates[1].error - best.error &lt; .035)) continue;
+      return [
+        { text: best.left, sourceText: record.sourceText || text, rect: { ...rect, left: gap.start, right: gap.left } },
+        { text: best.right, sourceText: record.sourceText || text, rect: { ...rect, left: gap.right, right: gap.end } }
+      ].flatMap(part =&gt; splitPdfParagraph(part, records, readColor, level + 1));
+    }
+    return [record];
   }
 
   function isDrivePdfRoute(address) {
@@ -3565,18 +3652,26 @@ SOFTWARE.
     const bounds = current.element.getBoundingClientRect();
     const readColor = pdfPageColorReader(doc, current.element);
     const blocks = [];
-    for (const paragraph of layer?.querySelectorAll(PDF_SELECTORS.paragraph) || []) {
-      const rect = paragraph.getBoundingClientRect();
+    const records = [...(layer?.querySelectorAll(PDF_SELECTORS.paragraph) || [])].map(paragraph =&gt; {
+      const { left, top, right, bottom } = paragraph.getBoundingClientRect();
+      return { text: paragraph.textContent.trim(), rect: { left, top, right, bottom } };
+    });
+    for (const record of records.flatMap(p =&gt; splitPdfParagraph(p, records, readColor))) {
+      const { text, rect } = record;
       // The selection layer is white regardless of PDF colors. Sample the rendered page image instead.
       // Layout sorting and duplicate detection use CSS-pixel tolerances, as in Canva.
       // Keep both axes in page-relative CSS pixels: percentages make a normal gutter
       // look too small and distort its width relative to the text height.
-      const block = pdfTextBlock(paragraph.textContent, {
+      const block = pdfTextBlock(text, {
         left: rect.left - bounds.left,
         right: rect.right - bounds.left,
         top: rect.top - bounds.top,
         bottom: rect.bottom - bounds.top
       }, readColor(rect));
+      if (block &amp;&amp; record.sourceText) {
+        const original = pdfTextBlock(record.sourceText, rect);
+        block.sourceText = (original.list?.marker || &#x27;&#x27;) + original.runs[0].text;
+      }
       if (block) blocks.push(block);
     }
     return sanitizePdfSnapshot({ open: true, documentTitle, page, total, blocks }) || { open: false };
@@ -3588,7 +3683,7 @@ SOFTWARE.
     if (typeof input.documentTitle !== &#x27;string&#x27; || input.documentTitle.length &gt; 1024 || !/\.pdf$/i.test(input.documentTitle) ||
         !Number.isInteger(input.page) || !Number.isInteger(input.total) || input.page &lt; 0 || input.total &lt; 0 ||
         input.page &gt; input.total || input.total &gt; 100000 || !Array.isArray(input.blocks) || input.blocks.length &gt; 1000) return null;
-    let size = 0;
+    let size = 0, sourceSize = 0;
     const blocks = [];
     for (const block of input.blocks) {
       const text = block?.runs?.[0]?.text;
@@ -3601,6 +3696,11 @@ SOFTWARE.
       } };
       if (block.list &amp;&amp; typeof block.list.marker === &#x27;string&#x27; &amp;&amp; block.list.marker.length &lt;= 20) {
         clean.list = { marker: block.list.marker, depth: 0 };
+      }
+      if (block.sourceText !== undefined) {
+        if (typeof block.sourceText !== &#x27;string&#x27; || block.sourceText.length &gt; 20000 ||
+            (sourceSize += block.sourceText.length) &gt; 200000) return null;
+        clean.sourceText = block.sourceText;
       }
       blocks.push(clean);
     }
@@ -3617,8 +3717,16 @@ SOFTWARE.
   function pdfPageKey(address, snapshot, blocks) {
     if (!snapshot?.open || !snapshot.page || !blocks.length) return &#x27;&#x27;;
     const url = new URL(address);
-    const identity = JSON.stringify([url.origin + url.pathname, snapshot.documentTitle, snapshot.page,
-      blocks.map(block =&gt; (block.list?.marker || &#x27;&#x27;) + block.runs.map(run =&gt; run.text).join(&#x27;&#x27;)).sort()]);
+    // Keep page preferences stable when a late-loading image lets us split a
+    // paragraph. The identity uses the original selection-layer paragraphs.
+    const joined = new Set();
+    const texts = blocks.flatMap(block =&gt; {
+      if (!block.sourceText) return [(block.list?.marker || &#x27;&#x27;) + block.runs.map(run =&gt; run.text).join(&#x27;&#x27;)];
+      if (joined.has(block.sourceText)) return [];
+      joined.add(block.sourceText);
+      return [block.sourceText];
+    });
+    const identity = JSON.stringify([url.origin + url.pathname, snapshot.documentTitle, snapshot.page, texts.sort()]);
     let hash = 2166136261, other = 2246822507;
     for (let i = 0; i &lt; identity.length; i++) {
       hash = Math.imul(hash ^ identity.charCodeAt(i), 16777619);
@@ -3724,7 +3832,7 @@ SOFTWARE.
       extractStyledBlocks, textUnits, translationSeparator,
       filterRenderedRects, orderVisibleBlocks, finalizeListBlocks, formatListMarker, renderTranslatedBlocks,
       orderByColumns, pageOrderKey, createPageOrderPreferences,
-      PDF_SELECTORS, PDF_CHANNEL, safePdfColor, samplePdfTextColor, pdfPageColorReader, isDrivePdfRoute, visiblePdfRect, choosePdfPage, pdfTextBlock,
+      PDF_SELECTORS, PDF_CHANNEL, safePdfColor, samplePdfTextColor, pdfPageColorReader, pdfLineGaps, splitPdfParagraph, isDrivePdfRoute, visiblePdfRect, choosePdfPage, pdfTextBlock,
       readDrivePdf, sanitizePdfSnapshot, acceptPdfMessage, pdfPageKey, createPdfSource, startPdfFrameSource,
       uiLanguages: Object.keys(UI_MESSAGES)
     };
@@ -4340,7 +4448,7 @@ SOFTWARE.
 <dt>パネルが出ない</dt><dd>資料に合う版を登録したか確認します。Canva資料にはCanva版、PDFにはPDF版が必要です。資料を読むChromeのプロフィールで、該当のスクリプトと「ユーザースクリプトを許可」を有効にし、資料のタブを再読み込みしてください。Canvaの編集画面では動作しません。</dd>
 <dt>Tampermonkeyのアイコンに赤い「1」が出る</dt><dd>実行されたスクリプトの数を示す表示です。赤い「1」自体はエラーではありません。<a href="https://www.tampermonkey.net/" target="_blank" rel="noopener noreferrer">公式説明</a></dd>
 <dt>文字が表示されない・エラーが出る</dt><dd>資料の読み込みを待ち、開始ボタンを押してください。どちらの版も画像に含まれる文字は翻訳対象外です。Chromeや学校の管理設定によって、翻訳機能を利用できない場合もあります。</dd>
-<dt>PDFで「列順」にしても左右の列が交互に表示される</dt><dd>PDF版 v0.4.1で、列間の余白が狭いPDFの読み順を修正しました。<a href="#pdf-code">PDF版のコード</a>を更新し、資料のタブを再読み込みして「Column order (left → right)」を選んでください。</dd>
+<dt>PDFで「列順」にしても左右の列が交互に表示される</dt><dd>PDF版 v0.4.2で、左右の文章が一つに結合されて読み取られる場合の処理を追加しました。PDF画像の空白と周囲の文字位置を照合し、分離できる文章を各列に戻します。<a href="#pdf-code">PDF版のコード</a>を更新し、資料のタブを再読み込みして「Column order (left → right)」を選んでください。文章の境界を確認できない場合は、元の文章を保持します。</dd>
 <dt>英語の資料が日本語にならない</dt><dd>最新版のコードに更新し、「翻訳元：English」「翻訳先：日本語」を選んで「翻訳開始」を押してください。翻訳元と翻訳先が同じ場合は、原文を表示します。</dd>
 <dt>番号や文字色が元の資料と違う</dt><dd>番号は取得できる範囲で反映します。Canva版は文字の色情報を読み取ります。PDF版は行・段落ごとの代表色を画像から推定し、文中の一部分だけの色分けには未対応です。PDFの色を取得できない場合は濃いグレーで表示します。</dd>
 <dt>Googleサイト上でコードのコピーができない</dt><dd>使いたい版の「コードを表示・手動でコピーする」を開きます。コード欄をクリックし、⌘＋A → ⌘＋C（Mac）、またはCtrl＋A → Ctrl＋C（Windows）でコピーしてください。</dd>
@@ -4348,7 +4456,7 @@ SOFTWARE.
 </section>
 <p class="small after-code">このツールは授業資料を選んだ言語で読むための試用版です。資料の構成や利用環境によっては、文字・読み順・色を正しく反映できない場合があります。</p>
 </main>
-<footer><div class="wrap">2026年10月4日更新 · Canva版 v2.9.0 ／ PDF版 v0.4.1</div></footer>
+<footer><div class="wrap">2026年10月4日更新 · Canva版 v2.9.0 ／ PDF版 v0.4.2</div></footer>
 <script>
 for (const kind of ['canva', 'pdf']) {
  document.getElementById(`copy-${kind}-code`).addEventListener('click', async () => {

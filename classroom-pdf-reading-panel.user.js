@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Classroom PDF 翻訳パネル（試用版）
 // @namespace    local.classroom-pdf-translation
-// @version      0.4.1
+// @version      0.4.2
 // @description  Classroom・Google Driveで開いたPDFを、保存せず横のパネルで翻訳します。
 // @match        https://classroom.google.com/*
 // @match        https://drive.google.com/viewer/main*
@@ -1395,7 +1395,7 @@ SOFTWARE.
     if (!pdfImageCache || pdfImageCache.image !== image || pdfImageCache.src !== src ||
         pdfImageCache.naturalWidth !== image.naturalWidth || pdfImageCache.naturalHeight !== image.naturalHeight) {
       const cache = { image, src, naturalWidth: image.naturalWidth, naturalHeight: image.naturalHeight,
-        pixels: null, colors: new Map() };
+        pixels: null, colors: new Map(), gaps: new Map() };
       pdfImageCache = cache;
       try {
         const scale = Math.min(1, 2400 / Math.max(image.naturalWidth, image.naturalHeight));
@@ -1412,13 +1412,14 @@ SOFTWARE.
     const cache = pdfImageCache, bounds = image.getBoundingClientRect();
     const width = bounds.right - bounds.left, height = bounds.bottom - bounds.top;
     if (!cache.pixels || width <= 0 || height <= 0) return () => PDF_DEFAULT_COLOR;
-    return rect => {
-      const target = {
+    const imageRect = rect => ({
         left: (rect.left - bounds.left) / width * cache.pixels.width,
         right: (rect.right - bounds.left) / width * cache.pixels.width,
         top: (rect.top - bounds.top) / height * cache.pixels.height,
         bottom: (rect.bottom - bounds.top) / height * cache.pixels.height
-      };
+      });
+    const readColor = rect => {
+      const target = imageRect(rect);
       const key = [target.left, target.top, target.right, target.bottom].map(Math.round).join(',');
       if (!cache.colors.has(key)) {
         if (cache.colors.size >= 1000) cache.colors.clear();
@@ -1426,6 +1427,92 @@ SOFTWARE.
       }
       return cache.colors.get(key);
     };
+    readColor.gaps = rect => {
+      const target = imageRect(rect);
+      const key = [target.left, target.top, target.right, target.bottom].map(Math.round).join(',');
+      if (!cache.gaps.has(key)) {
+        if (cache.gaps.size >= 1000) cache.gaps.clear();
+        cache.gaps.set(key, pdfLineGaps(cache.pixels, target));
+      }
+      return cache.gaps.get(key).map(gap => Object.fromEntries(Object.entries(gap)
+        .map(([k, x]) => [k, bounds.left + x / cache.pixels.width * width])));
+    };
+    return readColor;
+  }
+
+  // Drive sometimes joins separate columns into one paragraph. Its DOM Range
+  // rectangles describe the invisible selection font, not the PDF glyphs.
+  // Use large blank strips in the already-rendered image to locate a real gap.
+  function pdfLineGaps(pixels, rect) {
+    const { width, height, data } = pixels;
+    const left = Math.max(0, Math.floor(rect.left)), right = Math.min(width, Math.ceil(rect.right));
+    const top = Math.max(0, Math.floor(rect.top)), bottom = Math.min(height, Math.ceil(rect.bottom));
+    if (right <= left || bottom <= top || (right - left) * (bottom - top) > 300000) return [];
+    const colors = new Map();
+    for (let y = top; y < bottom; y++) for (let x = left; x < right; x++) {
+      const i = (y * width + x) * 4;
+      if (data[i + 3] < 240) continue;
+      const key = ((data[i] >> 3) << 10) | ((data[i + 1] >> 3) << 5) | (data[i + 2] >> 3);
+      colors.set(key, (colors.get(key) || 0) + 1);
+    }
+    const background = [...colors].sort((a, b) => b[1] - a[1])[0];
+    if (!background || background[1] < (right - left) * (bottom - top) * .6) return [];
+    const bg = [((background[0] >> 10) & 31) * 8 + 4, ((background[0] >> 5) & 31) * 8 + 4, (background[0] & 31) * 8 + 4];
+    const ink = [];
+    for (let x = left; x < right; x++) {
+      let count = 0;
+      for (let y = top; y < bottom; y++) {
+        const i = (y * width + x) * 4;
+        if (data[i + 3] >= 240 && bg.reduce((sum, c, k) => sum + (data[i + k] - c) ** 2, 0) > 1800) count++;
+      }
+      if (count >= Math.max(2, (bottom - top) * .08)) ink.push(x);
+    }
+    const gaps = [];
+    for (let i = 1; i < ink.length; i++) {
+      if (ink[i] - ink[i - 1] >= Math.max(8, (bottom - top) * 1.5)) {
+        gaps.push({ left: ink[i - 1] + 1, right: ink[i], start: ink[0], end: ink[ink.length - 1] + 1 });
+      }
+    }
+    return gaps;
+  }
+
+  function splitPdfParagraph(record, records, readColor, level = 0) {
+    const { text, rect } = record;
+    if (!readColor.gaps || level >= 3 || !/\S[ \t\u00a0]+\S/u.test(text)) return [record];
+    const height = rect.bottom - rect.top;
+    const peers = records.filter(p => p !== record &&
+      p.rect.bottom - p.rect.top >= height * .6 && p.rect.bottom - p.rect.top <= height * 1.5);
+    const weight = value => [...value].reduce((sum, ch) => sum +
+      (/\s/u.test(ch) ? .3 : /[\u0020-\u007e]/u.test(ch) ? .55 : 1), 0);
+    for (const gap of readColor.gaps(rect)) {
+      // A blank within a sentence is insufficient: require at least two other
+      // paragraphs on each side of a shared, vertically overlapping gutter.
+      const edges = [...new Set([gap.left, gap.right, ...peers.flatMap(p => [p.rect.left, p.rect.right])])]
+        .filter(x => x >= gap.left && x <= gap.right).sort((a, b) => a - b);
+      const supported = edges.slice(1).some((edge, i) => {
+        const cut = (edges[i] + edge) / 2;
+        const left = peers.filter(p => p.rect.right <= cut), right = peers.filter(p => p.rect.left >= cut);
+        return left.length >= 2 && right.length >= 2 && left.some(a => right.some(b =>
+          Math.min(a.rect.bottom, b.rect.bottom) - Math.max(a.rect.top, b.rect.top) >= height * .3));
+      });
+      if (!supported) continue;
+      const leftWidth = gap.left - gap.start, rightWidth = gap.end - gap.right;
+      if (Math.min(leftWidth, rightWidth) < height) continue;
+      const ratio = leftWidth / (leftWidth + rightWidth);
+      const candidates = [...text.matchAll(/[ \t\u00a0]+/gu)].map(match => {
+        const left = text.slice(0, match.index).trim(), right = text.slice(match.index + match[0].length).trim();
+        const a = weight(left), b = weight(right);
+        return { left, right, error: Math.abs(a / (a + b) - ratio) };
+      }).filter(c => c.left && c.right).sort((a, b) => a.error - b.error);
+      const best = candidates[0];
+      // Keep ambiguous text intact. Never invent words or split within a word.
+      if (!best || best.error > .1 || (candidates[1] && candidates[1].error - best.error < .035)) continue;
+      return [
+        { text: best.left, sourceText: record.sourceText || text, rect: { ...rect, left: gap.start, right: gap.left } },
+        { text: best.right, sourceText: record.sourceText || text, rect: { ...rect, left: gap.right, right: gap.end } }
+      ].flatMap(part => splitPdfParagraph(part, records, readColor, level + 1));
+    }
+    return [record];
   }
 
   function isDrivePdfRoute(address) {
@@ -1499,18 +1586,26 @@ SOFTWARE.
     const bounds = current.element.getBoundingClientRect();
     const readColor = pdfPageColorReader(doc, current.element);
     const blocks = [];
-    for (const paragraph of layer?.querySelectorAll(PDF_SELECTORS.paragraph) || []) {
-      const rect = paragraph.getBoundingClientRect();
+    const records = [...(layer?.querySelectorAll(PDF_SELECTORS.paragraph) || [])].map(paragraph => {
+      const { left, top, right, bottom } = paragraph.getBoundingClientRect();
+      return { text: paragraph.textContent.trim(), rect: { left, top, right, bottom } };
+    });
+    for (const record of records.flatMap(p => splitPdfParagraph(p, records, readColor))) {
+      const { text, rect } = record;
       // The selection layer is white regardless of PDF colors. Sample the rendered page image instead.
       // Layout sorting and duplicate detection use CSS-pixel tolerances, as in Canva.
       // Keep both axes in page-relative CSS pixels: percentages make a normal gutter
       // look too small and distort its width relative to the text height.
-      const block = pdfTextBlock(paragraph.textContent, {
+      const block = pdfTextBlock(text, {
         left: rect.left - bounds.left,
         right: rect.right - bounds.left,
         top: rect.top - bounds.top,
         bottom: rect.bottom - bounds.top
       }, readColor(rect));
+      if (block && record.sourceText) {
+        const original = pdfTextBlock(record.sourceText, rect);
+        block.sourceText = (original.list?.marker || '') + original.runs[0].text;
+      }
       if (block) blocks.push(block);
     }
     return sanitizePdfSnapshot({ open: true, documentTitle, page, total, blocks }) || { open: false };
@@ -1522,7 +1617,7 @@ SOFTWARE.
     if (typeof input.documentTitle !== 'string' || input.documentTitle.length > 1024 || !/\.pdf$/i.test(input.documentTitle) ||
         !Number.isInteger(input.page) || !Number.isInteger(input.total) || input.page < 0 || input.total < 0 ||
         input.page > input.total || input.total > 100000 || !Array.isArray(input.blocks) || input.blocks.length > 1000) return null;
-    let size = 0;
+    let size = 0, sourceSize = 0;
     const blocks = [];
     for (const block of input.blocks) {
       const text = block?.runs?.[0]?.text;
@@ -1535,6 +1630,11 @@ SOFTWARE.
       } };
       if (block.list && typeof block.list.marker === 'string' && block.list.marker.length <= 20) {
         clean.list = { marker: block.list.marker, depth: 0 };
+      }
+      if (block.sourceText !== undefined) {
+        if (typeof block.sourceText !== 'string' || block.sourceText.length > 20000 ||
+            (sourceSize += block.sourceText.length) > 200000) return null;
+        clean.sourceText = block.sourceText;
       }
       blocks.push(clean);
     }
@@ -1551,8 +1651,16 @@ SOFTWARE.
   function pdfPageKey(address, snapshot, blocks) {
     if (!snapshot?.open || !snapshot.page || !blocks.length) return '';
     const url = new URL(address);
-    const identity = JSON.stringify([url.origin + url.pathname, snapshot.documentTitle, snapshot.page,
-      blocks.map(block => (block.list?.marker || '') + block.runs.map(run => run.text).join('')).sort()]);
+    // Keep page preferences stable when a late-loading image lets us split a
+    // paragraph. The identity uses the original selection-layer paragraphs.
+    const joined = new Set();
+    const texts = blocks.flatMap(block => {
+      if (!block.sourceText) return [(block.list?.marker || '') + block.runs.map(run => run.text).join('')];
+      if (joined.has(block.sourceText)) return [];
+      joined.add(block.sourceText);
+      return [block.sourceText];
+    });
+    const identity = JSON.stringify([url.origin + url.pathname, snapshot.documentTitle, snapshot.page, texts.sort()]);
     let hash = 2166136261, other = 2246822507;
     for (let i = 0; i < identity.length; i++) {
       hash = Math.imul(hash ^ identity.charCodeAt(i), 16777619);
@@ -1658,7 +1766,7 @@ SOFTWARE.
       extractStyledBlocks, textUnits, translationSeparator,
       filterRenderedRects, orderVisibleBlocks, finalizeListBlocks, formatListMarker, renderTranslatedBlocks,
       orderByColumns, pageOrderKey, createPageOrderPreferences,
-      PDF_SELECTORS, PDF_CHANNEL, safePdfColor, samplePdfTextColor, pdfPageColorReader, isDrivePdfRoute, visiblePdfRect, choosePdfPage, pdfTextBlock,
+      PDF_SELECTORS, PDF_CHANNEL, safePdfColor, samplePdfTextColor, pdfPageColorReader, pdfLineGaps, splitPdfParagraph, isDrivePdfRoute, visiblePdfRect, choosePdfPage, pdfTextBlock,
       readDrivePdf, sanitizePdfSnapshot, acceptPdfMessage, pdfPageKey, createPdfSource, startPdfFrameSource,
       uiLanguages: Object.keys(UI_MESSAGES)
     };
