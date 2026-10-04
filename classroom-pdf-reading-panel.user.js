@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Classroom PDF 翻訳パネル（試用版）
 // @namespace    local.classroom-pdf-translation
-// @version      0.4.0
+// @version      0.4.1
 // @description  Classroom・Google Driveで開いたPDFを、保存せず横のパネルで翻訳します。
 // @match        https://classroom.google.com/*
 // @match        https://drive.google.com/viewer/main*
@@ -1497,17 +1497,19 @@ SOFTWARE.
     const page = digits?.length >= 2 ? Number(digits[0]) : current.index + 1;
     const total = digits?.length >= 2 ? Number(digits[1]) : elements.length;
     const bounds = current.element.getBoundingClientRect();
-    const width = bounds.right - bounds.left, height = bounds.bottom - bounds.top;
     const readColor = pdfPageColorReader(doc, current.element);
     const blocks = [];
     for (const paragraph of layer?.querySelectorAll(PDF_SELECTORS.paragraph) || []) {
       const rect = paragraph.getBoundingClientRect();
       // The selection layer is white regardless of PDF colors. Sample the rendered page image instead.
+      // Layout sorting and duplicate detection use CSS-pixel tolerances, as in Canva.
+      // Keep both axes in page-relative CSS pixels: percentages make a normal gutter
+      // look too small and distort its width relative to the text height.
       const block = pdfTextBlock(paragraph.textContent, {
-        left: (rect.left - bounds.left) / width * 100,
-        right: (rect.right - bounds.left) / width * 100,
-        top: (rect.top - bounds.top) / height * 100,
-        bottom: (rect.bottom - bounds.top) / height * 100
+        left: rect.left - bounds.left,
+        right: rect.right - bounds.left,
+        top: rect.top - bounds.top,
+        bottom: rect.bottom - bounds.top
       }, readColor(rect));
       if (block) blocks.push(block);
     }

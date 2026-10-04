@@ -2057,17 +2057,17 @@ SOFTWARE.
 </article>
 
 <article class="tool-card" id="pdf-code" aria-labelledby="pdf-code-title">
-<h3 id="pdf-code-title">Classroomで配布されたPDF用 <span class="tool-version">v0.4.0</span></h3>
+<h3 id="pdf-code-title">Classroomで配布されたPDF用 <span class="tool-version">v0.4.1</span></h3>
 <p><strong>Classroom内のPDFプレビュー</strong>や、<strong>Google DriveのPDF閲覧画面</strong>で使います。PDFのダウンロードは不要です。</p>
 <p class="script-name">登録する名前：<strong>Classroom PDF 翻訳パネル（試用版）</strong></p>
 <div class="actions"><button class="button" id="copy-pdf-code" type="button">PDF版のコードをコピー</button><a class="button secondary" href="#pdf-use">PDFでの使い方</a></div>
-<p class="status" id="copy-pdf-status" role="status">PDF版 v0.4.0</p>
+<p class="status" id="copy-pdf-status" role="status">PDF版 v0.4.1</p>
 <details class="source-code" id="source-pdf-details"><summary>PDF版のコードを表示・手動でコピーする</summary>
 <p class="small">コード欄をクリックし、⌘＋A → ⌘＋C（Mac）、またはCtrl＋A → Ctrl＋C（Windows）でコピーできます。</p>
 <textarea id="source-pdf-code" translate="no" class="notranslate" readonly spellcheck="false" wrap="off" dir="ltr" aria-label="Tampermonkeyに登録するPDF版のコード">// ==UserScript==
 // @name         Classroom PDF 翻訳パネル（試用版）
 // @namespace    local.classroom-pdf-translation
-// @version      0.4.0
+// @version      0.4.1
 // @description  Classroom・Google Driveで開いたPDFを、保存せず横のパネルで翻訳します。
 // @match        https://classroom.google.com/*
 // @match        https://drive.google.com/viewer/main*
@@ -3563,17 +3563,19 @@ SOFTWARE.
     const page = digits?.length &gt;= 2 ? Number(digits[0]) : current.index + 1;
     const total = digits?.length &gt;= 2 ? Number(digits[1]) : elements.length;
     const bounds = current.element.getBoundingClientRect();
-    const width = bounds.right - bounds.left, height = bounds.bottom - bounds.top;
     const readColor = pdfPageColorReader(doc, current.element);
     const blocks = [];
     for (const paragraph of layer?.querySelectorAll(PDF_SELECTORS.paragraph) || []) {
       const rect = paragraph.getBoundingClientRect();
       // The selection layer is white regardless of PDF colors. Sample the rendered page image instead.
+      // Layout sorting and duplicate detection use CSS-pixel tolerances, as in Canva.
+      // Keep both axes in page-relative CSS pixels: percentages make a normal gutter
+      // look too small and distort its width relative to the text height.
       const block = pdfTextBlock(paragraph.textContent, {
-        left: (rect.left - bounds.left) / width * 100,
-        right: (rect.right - bounds.left) / width * 100,
-        top: (rect.top - bounds.top) / height * 100,
-        bottom: (rect.bottom - bounds.top) / height * 100
+        left: rect.left - bounds.left,
+        right: rect.right - bounds.left,
+        top: rect.top - bounds.top,
+        bottom: rect.bottom - bounds.top
       }, readColor(rect));
       if (block) blocks.push(block);
     }
@@ -4329,7 +4331,7 @@ SOFTWARE.
 <tr><td>資料の言語・翻訳先を変える</td><td>「Translate from（翻訳元）」で資料の言語、「Translate to（翻訳先）」で読みたい言語を選び、開始ボタンを押します。</td></tr>
 <tr><td>小さく畳む・戻す</td><td>「Minimize」で畳み、「Expand」で戻します。</td></tr>
 <tr><td>ボタンの言語を変える</td><td>「Translate buttons and messages」のチェックを切り替えます。オン：選択した言語／オフ：日本語。</td></tr>
-<tr><td>読む順番を変える</td><td>Canva版では「Reading order (this slide)」、PDF版では「Reading order (this page)」で選びます。「Column order (left → right)」は左列→右列、「Row order」は上の行から順に読みます。初期設定はCanva版が行順、PDF版が列順です。設定はページごとに保存されます。</td></tr>
+<tr><td>読む順番を変える</td><td>Canva版では「Reading order (this slide)」、PDF版では「Reading order (this page)」で選びます。「Column order (left → right)」は各列を上から下へ読み、左列→右列の順に表示します。「Row order」は上の行から順に読みます。初期設定はCanva版が行順、PDF版が列順です。設定はページごとに保存されます。</td></tr>
 </tbody></table></div>
 </section>
 
@@ -4338,6 +4340,7 @@ SOFTWARE.
 <dt>パネルが出ない</dt><dd>資料に合う版を登録したか確認します。Canva資料にはCanva版、PDFにはPDF版が必要です。資料を読むChromeのプロフィールで、該当のスクリプトと「ユーザースクリプトを許可」を有効にし、資料のタブを再読み込みしてください。Canvaの編集画面では動作しません。</dd>
 <dt>Tampermonkeyのアイコンに赤い「1」が出る</dt><dd>実行されたスクリプトの数を示す表示です。赤い「1」自体はエラーではありません。<a href="https://www.tampermonkey.net/" target="_blank" rel="noopener noreferrer">公式説明</a></dd>
 <dt>文字が表示されない・エラーが出る</dt><dd>資料の読み込みを待ち、開始ボタンを押してください。どちらの版も画像に含まれる文字は翻訳対象外です。Chromeや学校の管理設定によって、翻訳機能を利用できない場合もあります。</dd>
+<dt>PDFで「列順」にしても左右の列が交互に表示される</dt><dd>PDF版 v0.4.1で、列間の余白が狭いPDFの読み順を修正しました。<a href="#pdf-code">PDF版のコード</a>を更新し、資料のタブを再読み込みして「Column order (left → right)」を選んでください。</dd>
 <dt>英語の資料が日本語にならない</dt><dd>最新版のコードに更新し、「翻訳元：English」「翻訳先：日本語」を選んで「翻訳開始」を押してください。翻訳元と翻訳先が同じ場合は、原文を表示します。</dd>
 <dt>番号や文字色が元の資料と違う</dt><dd>番号は取得できる範囲で反映します。Canva版は文字の色情報を読み取ります。PDF版は行・段落ごとの代表色を画像から推定し、文中の一部分だけの色分けには未対応です。PDFの色を取得できない場合は濃いグレーで表示します。</dd>
 <dt>Googleサイト上でコードのコピーができない</dt><dd>使いたい版の「コードを表示・手動でコピーする」を開きます。コード欄をクリックし、⌘＋A → ⌘＋C（Mac）、またはCtrl＋A → Ctrl＋C（Windows）でコピーしてください。</dd>
@@ -4345,7 +4348,7 @@ SOFTWARE.
 </section>
 <p class="small after-code">このツールは授業資料を選んだ言語で読むための試用版です。資料の構成や利用環境によっては、文字・読み順・色を正しく反映できない場合があります。</p>
 </main>
-<footer><div class="wrap">2026年10月3日更新 · Canva版 v2.9.0 ／ PDF版 v0.4.0</div></footer>
+<footer><div class="wrap">2026年10月4日更新 · Canva版 v2.9.0 ／ PDF版 v0.4.1</div></footer>
 <script>
 for (const kind of ['canva', 'pdf']) {
  document.getElementById(`copy-${kind}-code`).addEventListener('click', async () => {
